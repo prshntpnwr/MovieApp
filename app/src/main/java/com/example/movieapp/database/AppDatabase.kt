@@ -2,7 +2,6 @@ package com.example.movieapp.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
 
 @Database(
     entities = [(Movie::class)],
@@ -11,4 +10,5 @@ import androidx.room.TypeConverters
 )
 abstract class AppDatabase : RoomDatabase() {
 
+    abstract fun appDao(): AppDao
 }
