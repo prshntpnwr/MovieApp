@@ -18,7 +18,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "sandip.example.com.databinding.utils.AppTestRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
 
@@ -43,8 +43,16 @@ android {
     }
 
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
+            buildConfigField 'String', "ApiKey", api_key
+            resValue 'string', "api_key", api_key
+            testCoverageEnabled = true
+        }
+        release {
+            minifyEnabled true
+            buildConfigField 'String', "ApiKey", api_key
+            resValue 'string', "api_key", api_key
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

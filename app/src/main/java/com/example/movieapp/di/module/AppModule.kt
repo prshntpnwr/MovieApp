@@ -26,31 +26,32 @@ class AppModule {
     // database injection
     @Provides
     @Singleton
-    fun provideDatabaseModule(application: Application): AppDatabase {
+    fun provideDatabase(application: Application): AppDatabase {
         return Room.databaseBuilder(application, AppDatabase::class.java, "movie_db")
             .fallbackToDestructiveMigration()
             .build()
     }
 
     @Provides
-    fun webServiceHolderModule(): WebServiceHolder {
+    fun webServiceHolder(): WebServiceHolder {
         return WebServiceHolder.instance
     }
 
     @Provides
-    fun provideExecutorModule(): AppExecutors = AppExecutors()
+    fun provideGson(): Gson = GsonBuilder().create()
 
     @Provides
-    fun provideGsonModule(): Gson = GsonBuilder().create()
-
-    @Provides
-    fun provideAppRepository(webService: WebService, executors: AppExecutors, appDao: AppDao): AppRepository {
-        return AppRepository(webService, executors, appDao)
-    }
+    fun provideExecutor(): AppExecutors = AppExecutors()
 
     @Provides
     @Singleton
     fun provideGithubDao(database: AppDatabase) = database.appDao()
+
+    @Provides
+    @Singleton
+    fun provideAppRepository(webservice: WebService, executor: AppExecutors, dao: AppDao): AppRepository {
+        return AppRepository(webservice, executor, dao)
+    }
 
     @SuppressLint("NewApi")
     @Provides

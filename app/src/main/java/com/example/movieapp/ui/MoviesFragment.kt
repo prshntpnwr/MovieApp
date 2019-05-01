@@ -2,22 +2,30 @@ package com.example.movieapp.ui
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 
 import com.example.movieapp.R
 import com.example.movieapp.binding.FragmentDataBindingComponent
+import com.example.movieapp.database.Movie
 import com.example.movieapp.databinding.MoviesFragmentBinding
+import com.example.movieapp.di.Injectable
 import com.example.movieapp.observer.MoviesViewModel
+import com.example.movieapp.util.AppExecutors
+import com.example.movieapp.util.Status
 import javax.inject.Inject
 
-class MoviesFragment : Fragment() {
+class MoviesFragment : Fragment(), Injectable {
+
+    @Inject
+    lateinit var executors: AppExecutors
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -53,8 +61,36 @@ class MoviesFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setActionBar()
+
+        val adapter = MoviesAdapter(dataBindingComponent, executors, this::onItemClick)
+        binding.let {
+            it.rvMovies.adapter = adapter
+            it.lifecycleOwner = this
+        }
+
         viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(MoviesViewModel::class.java)
+            .also {
+                it.init("popularity")
+                it.result.observe(this, Observer { res ->
+                    binding.resource = res
+                    binding.count = res?.data?.size
+                    adapter.submitList(res?.data)
+                    when (res?.status) {
+                        Status.SUCCESS -> {
+                        }
+
+                        Status.ERROR -> {
+                            Toast.makeText(requireContext(), getString(R.string.generalError), Toast.LENGTH_LONG).show()
+                        }
+
+                        Status.LOADING -> { }
+                    }
+                })
+            }
+    }
+
+    private fun onItemClick(movie: Movie) {
 
     }
 
@@ -67,4 +103,14 @@ class MoviesFragment : Fragment() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun navController() = findNavController()
 }

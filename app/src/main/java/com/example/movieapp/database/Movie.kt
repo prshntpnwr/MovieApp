@@ -3,7 +3,7 @@ package com.example.movieapp.database
 import androidx.room.Entity
 import com.google.gson.annotations.SerializedName
 
-@Entity(tableName = "movie",
+@Entity(tableName = "movies",
 	primaryKeys = ["id"])
 data class Movie(
 

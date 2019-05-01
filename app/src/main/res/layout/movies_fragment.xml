@@ -1,19 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <FrameLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
+    <data>
+
+        <import type="android.view.View"/>
+
+        <import type="com.example.movieapp.util.Status"/>
+
+        <variable
+                name="resource"
+                type="com.example.movieapp.util.Resource"/>
+
+        <variable
+                name="count"
+                type="Integer"/>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".ui.MoviesFragment">
+            android:layout_height="match_parent">
 
-        <TextView
+        <include
+                android:id="@+id/progress"
+                layout="@layout/layout_loading"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="Hello"/>
+                app:resource="@{resource}"/>
 
-    </FrameLayout>
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_movies"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:viewVisible="@{resource.status != Status.LOADING}"
+                tools:listitem="@layout/list_item_movies"
+                app:layout_constraintTop_toTopOf="parent"
+                android:clipToPadding="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:padding="@dimen/material_component_cards_padding"/>
+
+        <include
+                layout="@layout/layout_empty"
+                app:count="@{count}"
+                app:resource="@{resource}"
+                app:displayText="@{@string/image_description}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

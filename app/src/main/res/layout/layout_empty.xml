@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable name="count" type="Integer"/>
+
+        <import type="com.example.movieapp.util.Status"/>
+
+        <variable
+                name="resource"
+                type="com.example.movieapp.util.Resource"/>
+
+        <variable
+                name="displayText"
+                type="String"/>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:viewVisible="@{resource.status != Status.LOADING &amp;&amp; count==0}">
+
+        <ImageView
+                android:id="@+id/empty_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:minHeight="@dimen/image_size_normal"
+                android:minWidth="@dimen/image_size_normal"
+                android:maxHeight="@dimen/image_view_size"
+                android:maxWidth="@dimen/image_view_size"
+                android:adjustViewBounds="true"
+                android:layout_marginRight="@dimen/activity_margin_mid"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginLeft="@dimen/activity_margin_mid"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/guideline"
+                app:srcCompat="@drawable/avd_error_outline"
+                android:contentDescription="@{displayText}" />
+
+        <TextView
+                android:id="@+id/empty_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:gravity="center"
+                android:layout_marginRight="@dimen/activity_margin_mid"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginLeft="@dimen/activity_margin_mid"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="@id/guideline"
+                android:padding="@dimen/material_component_cards_padding"
+                android:text="@{displayText}"
+                style="@style/Base.TextAppearance.AppCompat.Medium"/>
+
+        <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/guideline"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.5"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
