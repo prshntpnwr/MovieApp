@@ -6,6 +6,8 @@ import androidx.room.Room
 import com.example.movieapp.database.AppDatabase
 import com.example.movieapp.remote.WebServiceHolder
 import com.example.movieapp.remote.WebServices
+import com.example.movieapp.util.AppExecutors
+import com.example.movieapp.util.LiveDataCallAdapterFactory
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -34,6 +36,9 @@ class AppModule {
     }
 
     @Provides
+    fun provideExecutorModule(): AppExecutors = AppExecutors()
+
+    @Provides
     fun provideGsonModule(): Gson = GsonBuilder().create()
 
     @Provides
@@ -57,6 +62,7 @@ class AppModule {
             .baseUrl("https://api.themoviedb.org/3/")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(LiveDataCallAdapterFactory())
             .build()
     }
 
