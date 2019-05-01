@@ -3,9 +3,11 @@ package com.example.movieapp.di.module
 import android.annotation.SuppressLint
 import android.app.Application
 import androidx.room.Room
+import com.example.movieapp.database.AppDao
 import com.example.movieapp.database.AppDatabase
 import com.example.movieapp.remote.WebServiceHolder
-import com.example.movieapp.remote.WebServices
+import com.example.movieapp.remote.WebService
+import com.example.movieapp.repo.AppRepository
 import com.example.movieapp.util.AppExecutors
 import com.example.movieapp.util.LiveDataCallAdapterFactory
 import com.google.gson.Gson
@@ -42,6 +44,11 @@ class AppModule {
     fun provideGsonModule(): Gson = GsonBuilder().create()
 
     @Provides
+    fun provideAppRepository(webService: WebService, executors: AppExecutors, appDao: AppDao): AppRepository {
+        return AppRepository(webService, executors, appDao)
+    }
+
+    @Provides
     @Singleton
     fun provideGithubDao(database: AppDatabase) = database.appDao()
 
@@ -68,8 +75,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideApiWebservice(restAdapter: Retrofit): WebServices {
-        val webService = restAdapter.create(WebServices::class.java)
+    fun provideApiWebservice(restAdapter: Retrofit): WebService {
+        val webService = restAdapter.create(WebService::class.java)
         WebServiceHolder.instance.setAPIService(webService)
         return webService
     }

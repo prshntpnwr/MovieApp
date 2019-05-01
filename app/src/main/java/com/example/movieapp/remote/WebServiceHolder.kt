@@ -4,13 +4,13 @@ import javax.inject.Singleton
 
 @Singleton
 class WebServiceHolder {
-    private var webservice: WebServices? = null
+    private var webservice: WebService? = null
 
-    fun apiService(): WebServices? {
+    fun apiService(): WebService? {
         return this.webservice
     }
 
-    fun setAPIService(webservice: WebServices) {
+    fun setAPIService(webservice: WebService) {
         this.webservice = webservice
     }
 

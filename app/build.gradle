@@ -91,6 +91,9 @@ dependencies {
     implementation deps.glide
     implementation deps.navigation.fragment_ktx
 
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0-beta01'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-beta01'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0'
     androidTestImplementation deps.navigation.testing_ktx
     kapt deps.dagger.android_support_compiler
     kapt deps.dagger.compiler
