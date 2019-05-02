@@ -10,13 +10,8 @@
         <import type="com.example.movieapp.util.Status"/>
 
         <variable
-                name="resource"
-                type="com.example.movieapp.util.Resource"/>
-
-        <variable
-                name="count"
-                type="Integer"/>
-
+                name="status"
+                type="com.example.movieapp.util.Status"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,14 +23,14 @@
                 layout="@layout/layout_loading"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:resource="@{resource}"/>
+                app:status="@{status}"/>
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_movies"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:viewVisible="@{resource.status != Status.LOADING}"
+                app:viewVisible="@{status == Status.SUCCESS}"
                 tools:listitem="@layout/list_item_movies"
                 app:layout_constraintTop_toTopOf="parent"
                 android:clipToPadding="false"
@@ -46,8 +41,7 @@
 
         <include
                 layout="@layout/layout_empty"
-                app:count="@{count}"
-                app:resource="@{resource}"
+                app:status="@{status}"
                 app:displayText="@{@string/image_description}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

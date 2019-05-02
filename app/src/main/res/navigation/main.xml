@@ -10,6 +10,29 @@
             android:id="@+id/movieFragment"
             android:name="com.example.movieapp.ui.MoviesFragment"
             android:label="MovieListFragment"
-            tools:layout="@layout/movies_fragment"/>
+            tools:layout="@layout/movies_fragment">
+
+        <action
+                android:id="@+id/action_movieFragment_to_movieDetailFragment"
+                app:destination="@id/movieDetailFragment"/>
+
+    </fragment>
+
+    <fragment
+            android:id="@+id/movieDetailFragment"
+            android:name="com.example.movieapp.ui.MovieDetailFragment"
+            android:label="MovieDetailFragment"
+            tools:layout="@layout/movie_detail_fragment">
+
+        <argument
+                android:name="id"
+                app:argType="integer"/>
+
+        <argument
+                android:name="title"
+                app:argType="string"
+                app:nullable="true"/>
+
+    </fragment>
 
 </navigation>

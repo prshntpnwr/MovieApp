@@ -7,6 +7,7 @@ import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
+import com.example.movieapp.database.MovieGenre
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -38,7 +39,7 @@ class FragmentBindingAdapters @Inject constructor(val fragment: Fragment)  {
 
     @BindingAdapter(value = ["timeStamp", "format", "emptyTxt"], requireAll = true)
     fun bindDateTime(textView: TextView, timeStamp: String?, format: String, emptyTxt: String) {
-        if (timeStamp != null) {
+        if (!timeStamp.isNullOrEmpty()) {
             val format1 = SimpleDateFormat(
                 "yyyy-MM-DD", Locale.US
             )
@@ -52,7 +53,6 @@ class FragmentBindingAdapters @Inject constructor(val fragment: Fragment)  {
             textView.text = dateFormat.format(mDate)
         } else
             textView.text = emptyTxt
-
     }
 
     private fun getDayNumberSuffix(day: Int): String {
@@ -67,15 +67,15 @@ class FragmentBindingAdapters @Inject constructor(val fragment: Fragment)  {
         }
     }
 
-//    @BindingAdapter(value = ["genresList"], requireAll = true)
-//    fun bindGenres(textView: TextView, list: MutableList<MovieGenres?>?){
-//        list?.let {
-//            val localList: MutableList<String?> = ArrayList()
-//            it.filterIndexed { index, movieGenres ->
-//                localList.add(movieGenres?.name)
-//            }
-//            textView.text = localList.toString().replace("[","").replace("]","")
-//        }
-//    }
+    @BindingAdapter(value = ["genresList"], requireAll = true)
+    fun bindGenres(textView: TextView, list: MutableList<MovieGenre?>?){
+        list?.let {
+            val localList: MutableList<String?> = ArrayList()
+            it.filterIndexed { index, movieGenres ->
+                localList.add(movieGenres?.name)
+            }
+            textView.text = localList.toString().replace("[","").replace("]","")
+        }
+    }
 
 }

@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_trendy"
+          android:icon="@drawable/avd_trend"
+          app:showAsAction="ifRoom|withText"
+          android:title="@string/trendy">
+    </item>
+
+    <item android:id="@+id/action_rated"
+          android:icon="@drawable/avd_rated"
+          app:showAsAction="ifRoom|withText"
+          android:title="@string/sort">
+    </item>
 
 </menu>

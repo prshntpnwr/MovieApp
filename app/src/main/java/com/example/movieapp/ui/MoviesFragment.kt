@@ -19,6 +19,7 @@ import com.example.movieapp.databinding.MoviesFragmentBinding
 import com.example.movieapp.di.Injectable
 import com.example.movieapp.observer.MoviesViewModel
 import com.example.movieapp.util.AppExecutors
+import com.example.movieapp.util.Resource
 import com.example.movieapp.util.Status
 import javax.inject.Inject
 
@@ -32,7 +33,7 @@ class MoviesFragment : Fragment(), Injectable {
 
     private lateinit var viewModel: MoviesViewModel
 
-    private var dataBindingComponent : DataBindingComponent = FragmentDataBindingComponent(this)
+    private var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
     private lateinit var binding: MoviesFragmentBinding
 
@@ -71,32 +72,35 @@ class MoviesFragment : Fragment(), Injectable {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(MoviesViewModel::class.java)
             .also {
-                it.init("popularity")
+                it.init(FILTER_TRENDY)
                 it.result.observe(this, Observer { res ->
-                    binding.resource = res
-                    binding.count = res?.data?.size
+                    binding.status = res.status
                     adapter.submitList(res?.data)
                     when (res?.status) {
                         Status.SUCCESS -> {
+                            if (res.data?.size == 0)
+                                binding.status = Status.ERROR
                         }
 
                         Status.ERROR -> {
                             Toast.makeText(requireContext(), getString(R.string.generalError), Toast.LENGTH_LONG).show()
                         }
 
-                        Status.LOADING -> { }
+                        Status.LOADING -> {
+                        }
                     }
                 })
             }
     }
 
     private fun onItemClick(movie: Movie) {
-
+        val action = MoviesFragmentDirections.actionMovieFragmentToMovieDetailFragment(movie.id, movie.title)
+        navController().navigate(action)
     }
 
     private fun setActionBar() {
         val actionBar = (activity as AppCompatActivity).supportActionBar
-        actionBar?.let{
+        actionBar?.let {
             it.title = getString(R.string.app_name)
             it.setDisplayHomeAsUpEnabled(false)
             it.setDisplayShowHomeEnabled(false)
@@ -109,8 +113,21 @@ class MoviesFragment : Fragment(), Injectable {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_trendy -> {
+                viewModel.init(FILTER_TRENDY)
+            }
+            R.id.action_rated -> {
+                viewModel.init(FILTER_RATED)
+            }
+        }
         return super.onOptionsItemSelected(item)
     }
 
     private fun navController() = findNavController()
+
+    companion object {
+        const val FILTER_TRENDY = 0
+        const val FILTER_RATED = 1
+    }
 }

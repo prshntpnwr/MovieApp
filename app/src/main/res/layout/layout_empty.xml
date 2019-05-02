@@ -9,8 +9,8 @@
         <import type="com.example.movieapp.util.Status"/>
 
         <variable
-                name="resource"
-                type="com.example.movieapp.util.Resource"/>
+                name="status"
+                type="com.example.movieapp.util.Status"/>
 
         <variable
                 name="displayText"
@@ -21,7 +21,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:viewVisible="@{resource.status != Status.LOADING &amp;&amp; count==0}">
+            app:viewVisible="@{status == Status.ERROR}">
 
         <ImageView
                 android:id="@+id/empty_image"

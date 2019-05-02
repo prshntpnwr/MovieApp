@@ -19,4 +19,10 @@ interface AppDao {
         deleteMovies()
         insertMovies(list = listItem)
     }
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertMovieDetails(item: MovieDetail)
+
+    @Query("SELECT * FROM movie_detail where id = :id")
+    fun fetchMovieDetails(id: Int) :LiveData<MovieDetail>
 }
