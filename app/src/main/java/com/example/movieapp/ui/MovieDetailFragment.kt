@@ -62,7 +62,6 @@ class MovieDetailFragment : Fragment(), Injectable {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setActionBar()
 
         movieId = savedInstanceState?.getInt(MOVIE_ID) ?: MovieDetailFragmentArgs.fromBundle(arguments).id
         movieTitle = savedInstanceState?.getString(MOVIE_TITLE) ?: MovieDetailFragmentArgs.fromBundle(arguments).title
@@ -74,6 +73,7 @@ class MovieDetailFragment : Fragment(), Injectable {
                 it.result.observe(this, Observer { res ->
                     binding.status = res.status
                     binding.item = res?.data
+                    setActionBar(res.data?.title)
                     if (res.status == Status.SUCCESS && res?.data == null)
                         binding.status = Status.ERROR
 
@@ -83,7 +83,7 @@ class MovieDetailFragment : Fragment(), Injectable {
             }
     }
 
-    private fun setActionBar() {
+    private fun setActionBar(title: String?) {
         val actionBar = (activity as AppCompatActivity).supportActionBar
         actionBar?.let {
             it.title = movieTitle ?: getString(R.string.details)

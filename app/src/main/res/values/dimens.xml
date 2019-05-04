@@ -6,6 +6,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="activity_margin_mid">8dp</dimen>
     <dimen name="activity_margin_small">4dp</dimen>
+    <dimen name="padding_small">4dp</dimen>
+    <dimen name="padding_mid">8dp</dimen>
 
     <!--material_card-->
     <dimen name="material_component_cards_space_between_cards">4dp</dimen>
@@ -25,5 +27,9 @@
     <dimen name="activity_negative_margin_small">-4dp</dimen>
     <dimen name="image_view_size">40dp</dimen>
     <dimen name="image_size_normal">48dp</dimen>
+
+    <dimen name="backdrop_height">240dp</dimen>
+    <dimen name="poster_height">160dp</dimen>
+    <dimen name="poster_width">120dp</dimen>
 
 </resources>

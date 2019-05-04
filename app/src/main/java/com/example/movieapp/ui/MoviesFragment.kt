@@ -19,7 +19,6 @@ import com.example.movieapp.databinding.MoviesFragmentBinding
 import com.example.movieapp.di.Injectable
 import com.example.movieapp.observer.MoviesViewModel
 import com.example.movieapp.util.AppExecutors
-import com.example.movieapp.util.Resource
 import com.example.movieapp.util.Status
 import javax.inject.Inject
 
@@ -72,10 +71,11 @@ class MoviesFragment : Fragment(), Injectable {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(MoviesViewModel::class.java)
             .also {
-                it.init(FILTER_TRENDY)
+                it.fetchTask(FILTER_TRENDY)
                 it.result.observe(this, Observer { res ->
                     binding.status = res.status
                     adapter.submitList(res?.data)
+                    it.updateFetch(flag = false)
                     when (res?.status) {
                         Status.SUCCESS -> {
                             if (res.data?.size == 0)
@@ -113,12 +113,13 @@ class MoviesFragment : Fragment(), Injectable {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        viewModel.updateFetch(flag = true)
         when (item?.itemId) {
             R.id.action_trendy -> {
-                viewModel.init(FILTER_TRENDY)
+                viewModel.fetchTask(FILTER_TRENDY)
             }
             R.id.action_rated -> {
-                viewModel.init(FILTER_RATED)
+                viewModel.fetchTask(FILTER_RATED)
             }
         }
         return super.onOptionsItemSelected(item)

@@ -9,7 +9,7 @@
     </item>
 
     <item android:id="@+id/action_rated"
-          android:icon="@drawable/avd_rated"
+          android:icon="@drawable/avd_rated_dark"
           app:showAsAction="ifRoom|withText"
           android:title="@string/sort">
     </item>

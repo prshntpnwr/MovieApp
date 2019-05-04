@@ -74,7 +74,7 @@ class FragmentBindingAdapters @Inject constructor(val fragment: Fragment)  {
             it.filterIndexed { index, movieGenres ->
                 localList.add(movieGenres?.name)
             }
-            textView.text = localList.toString().replace("[","").replace("]","")
+            textView.text = localList.toString().replace("[","").replace("]","").replace(",", " | ")
         }
     }
 

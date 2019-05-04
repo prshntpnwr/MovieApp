@@ -15,6 +15,7 @@ class MoviesViewModel @Inject constructor(
     repo: AppRepository
 ) : ViewModel() {
 
+    private var shouldFetch = true
     private val _refID: MutableLiveData<RepoID> = MutableLiveData()
     val refID: LiveData<RepoID>
         get() = _refID
@@ -26,10 +27,15 @@ class MoviesViewModel @Inject constructor(
             }
         }
 
-    fun init(filter: Int) {
+    fun fetchTask(filter: Int) {
+        if (!shouldFetch) return
         val update = RepoID(filter)
         if (_refID.value == update) return
         _refID.postValue(update)
+    }
+
+    fun updateFetch(flag: Boolean) {
+        shouldFetch = flag
     }
 
     data class RepoID(val filter: Int?) {

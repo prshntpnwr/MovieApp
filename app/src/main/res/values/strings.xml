@@ -13,5 +13,6 @@
     <string name="minutes">Minutes</string>
     <string name="trendy">Trendy</string>
     <string name="top_rated">Top Rated</string>
+    <string name="synopsis">Synopsis</string>
     <string name="sort">Sort</string>
 </resources>
