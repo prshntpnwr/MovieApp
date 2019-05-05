@@ -41,6 +41,11 @@ class MovieDetailFragment : Fragment(), Injectable {
         outState.putString(MOVIE_TITLE, movieTitle)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -73,7 +78,7 @@ class MovieDetailFragment : Fragment(), Injectable {
                 it.result.observe(this, Observer { res ->
                     binding.status = res.status
                     binding.item = res?.data
-                    setActionBar(res.data?.title)
+                    setActionBar()
                     if (res.status == Status.SUCCESS && res?.data == null)
                         binding.status = Status.ERROR
 
@@ -83,20 +88,22 @@ class MovieDetailFragment : Fragment(), Injectable {
             }
     }
 
-    private fun setActionBar(title: String?) {
-        val actionBar = (activity as AppCompatActivity).supportActionBar
+    private fun setActionBar() {
+        val actionBar = (activity as MainActivity).supportActionBar
         actionBar?.let {
             it.title = movieTitle ?: getString(R.string.details)
             it.setDisplayHomeAsUpEnabled(true)
-            it.setDisplayShowHomeEnabled(false)
+            it.setDisplayShowHomeEnabled(true)
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> requireActivity().onBackPressed()
+            android.R.id.home -> {
+                requireActivity().onBackPressed()
+            }
         }
-        return super.onOptionsItemSelected(item)
+        return true
     }
 
     companion object {

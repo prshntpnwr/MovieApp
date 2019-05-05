@@ -4,14 +4,16 @@
 
     <item android:id="@+id/action_trendy"
           android:icon="@drawable/avd_trend"
+          android:title="@string/trendy"
+          android:orderInCategory="100"
           app:showAsAction="ifRoom|withText"
-          android:title="@string/trendy">
-    </item>
+          android:enabled="true"/>
 
     <item android:id="@+id/action_rated"
           android:icon="@drawable/avd_rated_dark"
+          android:title="@string/top_rated"
+          android:orderInCategory="100"
           app:showAsAction="ifRoom|withText"
-          android:title="@string/sort">
-    </item>
+          android:enabled="true"/>
 
 </menu>

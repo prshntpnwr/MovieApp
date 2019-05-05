@@ -20,9 +20,20 @@ class AppRepository @Inject constructor(
     private val dao: AppDao
 ) {
     private val apiKey = BuildConfig.ApiKey
-    val map: HashMap<Int, String?> = hashMapOf(
-        0 to "popularity.desc",
-        1 to "vote_average.desc"
+    val popular: HashMap<String, String> = hashMapOf(
+        "sort_by" to "popularity.desc"
+    )
+
+    val topRated: HashMap<String, String> = hashMapOf(
+        "sort_by" to "vote_average.desc",
+        "vote_count.gte" to "500",
+        "certification_country" to "US",
+        "certification" to "R"
+    )
+
+    val map: HashMap<Int, HashMap<String, String>> = hashMapOf(
+        0 to popular,
+        1 to topRated
     )
 
     fun fetchMovieList(category: Int): LiveData<Resource<List<Movie>>> {
@@ -37,7 +48,7 @@ class AppRepository @Inject constructor(
 
             override fun loadFromDb() = dao.fetchMovieList()
 
-            override fun createCall() = webservice.getMovieList(apiKey = apiKey, sortBy = map[category] ?: "")
+            override fun createCall() = webservice.getMovieList(apiKey = apiKey, sortBy = map[category]!!)
 
         }.asLiveData()
     }
