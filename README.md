@@ -2,6 +2,13 @@
 
 This is an Android application for finding Movies and related details. Use Room database to backup already queried data for offline use. Also, MVVM along with Jetpack architecture components and dagger2 are used.
 
+Screenshots :
+---------------------
+
+<img width="40%" src="/art/master.png" /> 
+
+<img width="40%" src="/art/detail.png" /> 
+
 ## License
 
 Copyright 2017 Prashant Panwar
