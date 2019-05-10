@@ -2,6 +2,7 @@ package com.example.movieapp.ui
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -20,6 +21,7 @@ import com.example.movieapp.di.Injectable
 import com.example.movieapp.observer.MoviesViewModel
 import com.example.movieapp.util.AppExecutors
 import com.example.movieapp.util.Status
+import com.google.gson.Gson
 import javax.inject.Inject
 
 class MoviesFragment : Fragment(), Injectable {
@@ -83,7 +85,7 @@ class MoviesFragment : Fragment(), Injectable {
                         }
 
                         Status.ERROR -> {
-                            Toast.makeText(requireContext(), getString(R.string.generalError), Toast.LENGTH_LONG).show()
+                            Toast.makeText(requireContext(), res.message, Toast.LENGTH_LONG).show()
                         }
 
                         Status.LOADING -> {
