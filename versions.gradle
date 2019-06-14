@@ -3,7 +3,7 @@ def versions = [:]
 versions.arch_core = "1.1.1"
 versions.room = "1.1.0"
 versions.lifecycle = "1.1.1"
-versions.support = "28.0.0-alpha1"
+versions.support = "support28.0.0-alpha1"
 versions.dagger = "2.16"
 versions.junit = "4.12"
 versions.retrofit = "2.3.0"
@@ -23,6 +23,7 @@ versions.junit = "4.12"
 versions.espresso = "3.0.2"
 versions.mockito = "2.7.19"
 versions.mockito_all = "1.10.19"
+versions.material_design = "1.1.0-alpha06"
 def deps = [:]
 
 def support = [:]
@@ -37,8 +38,11 @@ support.constraint_layout="com.android.support.constraint:constraint-layout:$ver
 support.core_utils = "com.android.support:support-core-utils:$versions.support"
 support.multidex="com.android.support:multidex:$versions.multidex"
 support.test_runner="com.android.support.test:runner:$versions.test_runner"
-support.exif_interface="com.android.support:exifinterface:$versions.support"
 deps.support = support
+
+def material = [:]
+material.material = "com.google.android.material:material:$versions.material_design"
+deps.material = material
 
 def room = [:]
 room.runtime = "android.arch.persistence.room:runtime:$versions.room"

@@ -88,8 +88,7 @@ class MoviesFragment : Fragment(), Injectable {
                             Toast.makeText(requireContext(), res.message, Toast.LENGTH_LONG).show()
                         }
 
-                        Status.LOADING -> {
-                        }
+                        Status.LOADING -> { }
                     }
                 })
             }
@@ -101,22 +100,23 @@ class MoviesFragment : Fragment(), Injectable {
     }
 
     private fun setActionBar() {
-        val actionBar = (activity as AppCompatActivity).supportActionBar
-        actionBar?.let {
-            it.title = getString(R.string.app_name)
-            it.setDisplayHomeAsUpEnabled(false)
-            it.setDisplayShowHomeEnabled(false)
+        (activity as AppCompatActivity).supportActionBar.let { actionBar ->
+            actionBar?.let {
+                it.title = getString(R.string.app_name)
+                it.setDisplayHomeAsUpEnabled(false)
+                it.setDisplayShowHomeEnabled(false)
+            }
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.menu, menu)
+        inflater.inflate(R.menu.menu, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         viewModel.updateFetch(flag = true)
-        when (item?.itemId) {
+        when (item.itemId) {
             R.id.action_trendy -> {
                 viewModel.fetchTask(FILTER_TRENDY)
             }

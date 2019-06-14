@@ -2,7 +2,16 @@
 <resources>
     <color name="colorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#F5F5F5</color>
-    <color name="colorAccent">#09B2C7</color>
+    <color name="colorSecondary">#09B2C7</color>
+    <color name="colorSecondaryVariant">#0D7A88</color>
+    <color name="colorOnPrimary">#000000</color>
+    <color name="colorOnSecondary">#000000</color>
+    <color name="colorBackground">#FFFFFF</color>
+    <color name="colorOnBackground">#FFFFFF</color>
+    <color name="colorSurface">#FFFFFF</color>
+    <color name="colorOnSurface">#FFFFFF</color>
+    <color name="colorError">#B00020</color>
+    <color name="colorOnError">#FFFFFF</color>
 
     <color name="primary_text">#000000</color>
     <color name="secondary_text">#757575</color>

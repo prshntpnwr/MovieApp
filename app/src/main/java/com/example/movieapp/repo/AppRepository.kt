@@ -44,7 +44,7 @@ class AppRepository @Inject constructor(
                 }
             }
 
-            override fun shouldFetch(data: List<Movie>?) = true
+            override fun shouldFetch(data: List<Movie>?) = data == null
 
             override fun loadFromDb() = dao.fetchMovieList()
 

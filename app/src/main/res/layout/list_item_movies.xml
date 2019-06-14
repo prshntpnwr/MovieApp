@@ -19,14 +19,13 @@
             android:foreground="?android:selectableItemBackground"
             android:padding="@dimen/material_component_cards_padding">
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
                 android:id="@+id/poster"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:elevation="@dimen/card_rest_elevation"
                 app:cardCornerRadius="@dimen/material_card_radius_mid"
                 android:layout_margin="@dimen/activity_margin_small">
 
@@ -54,7 +53,7 @@
                     style="@style/Base.TextAppearance.AppCompat.Body1"
                     android:textColor="@android:color/white"/>
 
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
                 android:id="@+id/title"
