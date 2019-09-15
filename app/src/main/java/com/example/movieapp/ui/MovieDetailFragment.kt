@@ -1,6 +1,7 @@
 package com.example.movieapp.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -70,6 +71,7 @@ class MovieDetailFragment : Fragment(), Injectable {
 
         movieId = savedInstanceState?.getInt(MOVIE_ID) ?: MovieDetailFragmentArgs.fromBundle(arguments).id
         movieTitle = savedInstanceState?.getString(MOVIE_TITLE) ?: MovieDetailFragmentArgs.fromBundle(arguments).title
+        Log.i(Thread.currentThread().name, "movie_id: $movieId")
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(MovieDetailViewModel::class.java)

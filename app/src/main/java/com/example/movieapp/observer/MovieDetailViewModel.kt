@@ -1,18 +1,22 @@
 package com.example.movieapp.observer
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel;
+import com.example.movieapp.database.Movie
 import com.example.movieapp.database.MovieDetail
 import com.example.movieapp.repo.AppRepository
 import com.example.movieapp.util.AbsentedLiveData
 import com.example.movieapp.util.Resource
+import kotlinx.coroutines.*
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 class MovieDetailViewModel @Inject constructor(
-    repo: AppRepository
-) : ViewModel() {
+    val repo: AppRepository
+) : ViewModel(), CoroutineScope {
 
     private val _refID: MutableLiveData<RepoID> = MutableLiveData()
     val refID: LiveData<RepoID>
@@ -39,5 +43,47 @@ class MovieDetailViewModel @Inject constructor(
                 f(refID)
             }
         }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Coroutines
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    private val handler = CoroutineExceptionHandler { _, exception ->
+        Log.d(Thread.currentThread().name, "$exception handled !")
+    }
+
+    lateinit var job: Job
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job + handler
+
+    fun fetchTask() {
+        GlobalScope.launch(coroutineContext) {
+            val movie = async(Dispatchers.IO + handler) { fetchMovie() }
+            val res = async(Dispatchers.IO + handler) { saveMovie(movie.await()) }
+        }
+    }
+
+    fun customScope() {
+        launch {
+            val movie = getMovie()
+        }
+    }
+
+    suspend fun fetchTask2(): Movie {
+        return withContext(coroutineContext) {
+            getMovie()
+        }
+    }
+
+    private suspend fun fetchMovie(): Movie {
+        return Movie()
+    }
+
+    private suspend fun saveMovie(movie: Movie) {
+
+    }
+
+    private fun getMovie(): Movie {
+        return Movie()
     }
 }

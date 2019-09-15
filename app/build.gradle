@@ -95,6 +95,9 @@ dependencies {
     implementation deps.support.multidex
     implementation deps.support.annotations
 
+    implementation deps.coroutines.core
+    implementation deps.coroutines.android
+
     implementation deps.gson
     implementation deps.glide
     implementation deps.navigation.fragment_ktx

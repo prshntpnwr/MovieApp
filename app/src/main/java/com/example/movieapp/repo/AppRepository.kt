@@ -59,7 +59,7 @@ class AppRepository @Inject constructor(
                 dao.insertMovieDetails(item = item)
             }
 
-            override fun shouldFetch(data: MovieDetail?) = true
+            override fun shouldFetch(data: MovieDetail?) = data == null
 
             override fun loadFromDb() = dao.fetchMovieDetails(id = id)
 
