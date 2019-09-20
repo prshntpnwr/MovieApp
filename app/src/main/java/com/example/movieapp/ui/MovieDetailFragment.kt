@@ -11,9 +11,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
+import androidx.transition.TransitionInflater
 import com.example.movieapp.R
 import com.example.movieapp.binding.FragmentDataBindingComponent
 import com.example.movieapp.databinding.MovieDetailFragmentBinding
@@ -30,10 +33,8 @@ class MovieDetailFragment : Fragment(), Injectable {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var viewModel: MovieDetailViewModel
-
-    private var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
-
+    private val viewModel: MovieDetailViewModel by viewModels { viewModelFactory }
+    private val dataBindingComponent: DataBindingComponent by lazy { FragmentDataBindingComponent(this) }
     private lateinit var binding: MovieDetailFragmentBinding
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -45,10 +46,13 @@ class MovieDetailFragment : Fragment(), Injectable {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        sharedElementEnterTransition =
+            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         DataBindingUtil.inflate<MovieDetailFragmentBinding>(
@@ -58,54 +62,48 @@ class MovieDetailFragment : Fragment(), Injectable {
             false,
             dataBindingComponent
         ).also {
+            it.converter = ConverterUtil()
+            it.lifecycleOwner = this
             binding = it
-            binding.converter = ConverterUtil()
-            binding.lifecycleOwner = this
-        }.run {
-            return this.root
+            return binding.root
         }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        movieId = savedInstanceState?.getInt(MOVIE_ID) ?: arguments?.getInt(MOVIE_ID) ?: 0
+        movieTitle = savedInstanceState?.getString(MOVIE_TITLE) ?: arguments?.getString(MOVIE_TITLE)
 
-        movieId = savedInstanceState?.getInt(MOVIE_ID) ?: MovieDetailFragmentArgs.fromBundle(arguments).id
-        movieTitle = savedInstanceState?.getString(MOVIE_TITLE) ?: MovieDetailFragmentArgs.fromBundle(arguments).title
-        Log.i(Thread.currentThread().name, "movie_id: $movieId")
+        viewModel.also {
+            it.init(refID = movieId)
+            it.result.observe(this, Observer { res ->
+                binding.status = res.status
+                binding.item = res?.data
+                setActionBar()
+                if (res.status == Status.SUCCESS && res?.data == null)
+                    binding.status = Status.ERROR
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-            .get(MovieDetailViewModel::class.java)
-            .also {
-                it.init(refID = movieId)
-                it.result.observe(this, Observer { res ->
-                    binding.status = res.status
-                    binding.item = res?.data
-                    setActionBar()
-                    if (res.status == Status.SUCCESS && res?.data == null)
-                        binding.status = Status.ERROR
-
-                    if (res?.status == Status.ERROR)
-                        Toast.makeText(requireContext(), getString(R.string.generalError), Toast.LENGTH_LONG).show()
-                })
-            }
+                if (res?.status == Status.ERROR)
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.generalError),
+                        Toast.LENGTH_LONG
+                    ).show()
+            })
+        }
     }
 
     private fun setActionBar() {
-        val actionBar = (activity as MainActivity).supportActionBar
-        actionBar?.let {
-            it.title = movieTitle ?: getString(R.string.details)
-            it.setDisplayHomeAsUpEnabled(true)
-            it.setDisplayShowHomeEnabled(true)
+        (activity as MainActivity).supportActionBar?.apply {
+            title = movieTitle ?: getString(R.string.details)
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                requireActivity().onBackPressed()
-            }
-        }
-        return true
+        if (item.itemId == android.R.id.home) findNavController().popBackStack()
+        return super.onOptionsItemSelected(item)
     }
 
     companion object {

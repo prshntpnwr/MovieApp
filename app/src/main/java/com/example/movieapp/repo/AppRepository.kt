@@ -20,11 +20,11 @@ class AppRepository @Inject constructor(
     private val dao: AppDao
 ) {
     private val apiKey = BuildConfig.ApiKey
-    val popular: HashMap<String, String> = hashMapOf(
+    private val popular: HashMap<String, String> = hashMapOf(
         "sort_by" to "popularity.desc"
     )
 
-    val topRated: HashMap<String, String> = hashMapOf(
+    private val topRated: HashMap<String, String> = hashMapOf(
         "sort_by" to "vote_average.desc",
         "vote_count.gte" to "500",
         "certification_country" to "US",

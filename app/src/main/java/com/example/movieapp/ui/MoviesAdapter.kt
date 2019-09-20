@@ -2,6 +2,7 @@ package com.example.movieapp.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
@@ -14,12 +15,12 @@ import com.example.movieapp.util.DataBoundListAdapter
 class MoviesAdapter(
     private val dataBindingComponent: DataBindingComponent,
     appExecutors: AppExecutors,
-    private val callback: ((Movie) -> Unit)?
+    private val callback: ((Movie, ImageView) -> Unit)?
 ) : DataBoundListAdapter<Movie, ListItemMoviesBinding>(
     appExecutors = appExecutors,
     diffCallback = object : DiffUtil.ItemCallback<Movie>() {
         override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem == newItem
         }
 
         override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
@@ -36,15 +37,13 @@ class MoviesAdapter(
                 parent,
                 false,
                 dataBindingComponent
-            )
-            .also { binding ->
-                binding.root.setOnClickListener {
-                    binding.item?.let {
-                        callback?.invoke(it)
+            ).also { b ->
+                b.root.setOnClickListener {
+                    b.item?.let {
+                        callback?.invoke(it, b.posterImage)
                     }
                 }
-            }
-            .run {
+            }.run {
                 return this
             }
     }

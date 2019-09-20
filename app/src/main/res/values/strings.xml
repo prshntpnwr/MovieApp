@@ -15,4 +15,5 @@
     <string name="top_rated">Top Rated</string>
     <string name="synopsis">Synopsis</string>
     <string name="sort">Sort</string>
+    <string name="transition_name_poster">posterImage</string>
 </resources>

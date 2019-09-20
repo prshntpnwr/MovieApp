@@ -55,12 +55,13 @@
                         android:layout_margin="@dimen/activity_margin_mid"
                         android:layout_marginTop="@dimen/activity_margin_mid"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/backdrop"
+                        app:layout_constraintTop_toBottomOf="@id/backdrop"
                         app:imageUrl="@{item.posterPath}"
-                        app:layout_constraintBottom_toBottomOf="@+id/backdrop"/>
+                        android:transitionName="@string/transition_name_poster"
+                        app:layout_constraintBottom_toBottomOf="@id/backdrop"/>
 
                 <TextView
-                        android:id="@+id/textView"
+                        android:id="@+id/rating"
                         style="@style/Base.TextAppearance.AppCompat.Medium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -74,7 +75,7 @@
                         android:layout_marginStart="@dimen/activity_margin_mid"
                         android:gravity="center"
                         android:text='@{" "+item.voteAverage+" "}'
-                        app:layout_constraintTop_toBottomOf="@+id/backdrop"
+                        app:layout_constraintTop_toBottomOf="@id/backdrop"
                         app:layout_constraintStart_toStartOf="parent"
                         tools:text="9.3"/>
 
@@ -87,9 +88,12 @@
                         android:layout_marginStart="@dimen/activity_margin_mid"
                         android:layout_marginEnd="@dimen/activity_margin_mid"
                         android:layout_marginRight="@dimen/activity_margin_mid"
-                        app:layout_constraintEnd_toStartOf="@+id/poster"
-                        app:layout_constraintStart_toStartOf="@+id/textView"
-                        app:layout_constraintTop_toBottomOf="@+id/textView"
+                        android:drawableTint="@color/secondary_text"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:textColor="@color/secondary_text"
+                        app:layout_constraintEnd_toStartOf="@id/poster"
+                        app:layout_constraintStart_toStartOf="@id/rating"
+                        app:layout_constraintTop_toBottomOf="@id/rating"
                         app:genresList="@{item.genres}"
                         tools:text="Drama | Action | Thriller"/>
 

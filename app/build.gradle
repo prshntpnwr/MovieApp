@@ -101,10 +101,18 @@ dependencies {
     implementation deps.gson
     implementation deps.glide
     implementation deps.navigation.fragment_ktx
+    implementation deps.navigation.runtime_ktx
+    implementation deps.navigation.fragment
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0-alpha01'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0'
+    implementation "androidx.fragment:fragment-ktx:1.1.0"
+    implementation deps.lifecycle.extensions_ktx
+    implementation deps.lifecycle.view_model_ktx
+    implementation deps.lifecycle.live_data
+    implementation deps.lifecycle.view_model_scope
+    implementation deps.arch_core.core
+    implementation deps.appcompat
+
     androidTestImplementation deps.navigation.testing_ktx
     kapt deps.dagger.android_support_compiler
     kapt deps.dagger.compiler

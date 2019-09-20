@@ -1,10 +1,7 @@
 package com.example.movieapp.observer
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.*
 import com.example.movieapp.database.Movie
 import com.example.movieapp.database.MovieDetail
 import com.example.movieapp.repo.AppRepository
@@ -67,12 +64,34 @@ class MovieDetailViewModel @Inject constructor(
         launch {
             val movie = getMovie()
         }
+
+
+        // or
+        val id = async {
+            val movie = getMovie()
+            movie.id
+
+        }
+
+        // or
+        launch {
+            val deffered = listOf(
+                async { getMovie() },
+                async { getMovie() }
+            )
+
+            deffered.awaitAll()
+        }
     }
 
     suspend fun fetchTask2(): Movie {
         return withContext(coroutineContext) {
             getMovie()
         }
+    }
+
+    fun dispatchAction(id: Int) = liveData {
+        emit(repo.fetchMovieDetails(id))
     }
 
     private suspend fun fetchMovie(): Movie {
