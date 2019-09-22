@@ -1,23 +1,20 @@
 package com.example.movieapp.ui
 
 import android.annotation.SuppressLint
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.ImageView
-import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
-
 import com.example.movieapp.R
 import com.example.movieapp.binding.FragmentDataBindingComponent
 import com.example.movieapp.database.Movie
@@ -28,6 +25,9 @@ import com.example.movieapp.ui.MovieDetailFragment.Companion.MOVIE_ID
 import com.example.movieapp.ui.MovieDetailFragment.Companion.MOVIE_TITLE
 import com.example.movieapp.util.AppExecutors
 import com.example.movieapp.util.Status
+import com.example.movieapp.util.setActionBar
+import com.example.movieapp.util.showToast
+import com.google.gson.Gson
 import javax.inject.Inject
 
 class MoviesFragment : Fragment(), Injectable {
@@ -38,7 +38,8 @@ class MoviesFragment : Fragment(), Injectable {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel: MoviesViewModel by viewModels { viewModelFactory }
-    private val dataBindingComponent: DataBindingComponent by lazy {  FragmentDataBindingComponent(this) }
+    private val dataBindingComponent: DataBindingComponent by lazy { FragmentDataBindingComponent(this) }
+    private val adapter by lazy { MoviesAdapter(dataBindingComponent, executors, ::onItemClick) }
 
     private lateinit var binding: MoviesFragmentBinding
 
@@ -67,26 +68,26 @@ class MoviesFragment : Fragment(), Injectable {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setActionBar()
-        val adapter = MoviesAdapter(dataBindingComponent, executors, ::onItemClick)
-        binding.let {
-            it.rvMovies.adapter = adapter
-            it.lifecycleOwner = this
+        setActionBar(getString(R.string.app_name))
+        binding.apply {
+            rvMovies.adapter = adapter
+            lifecycleOwner = this@MoviesFragment
         }
 
-        viewModel.also {
-                it.fetchTask(FILTER_TRENDY)
-                it.result.observe(this, Observer { res ->
-                    binding.status = res.status
-                    adapter.submitList(res?.data)
-                    it.updateFetch(flag = false)
-                    when (res?.status) {
-                        Status.SUCCESS -> if (res.data?.size == 0) binding.status = Status.ERROR
-                        Status.ERROR -> Toast.makeText(requireContext(), res.message, Toast.LENGTH_LONG).show()
-                        Status.LOADING -> { }
-                    }
-                })
-            }
+        viewModel.apply {
+            fetchTask(FILTER_TRENDY)
+            result.observe(this@MoviesFragment, Observer { res ->
+                binding.status = res.status
+                adapter.submitList(res?.data)
+                updateFetch(flag = false)
+                Log.e(Thread.currentThread().name, "movies: ${Gson().toJson(res)}")
+                when (res?.status) {
+                    Status.SUCCESS -> if (res.data?.size == 0) binding.status = Status.ERROR
+                    Status.ERROR -> showToast(res.message ?: "")
+                    Status.LOADING -> { }
+                }
+            })
+        }
     }
 
     @SuppressLint("NewApi")
@@ -100,17 +101,12 @@ class MoviesFragment : Fragment(), Injectable {
             MOVIE_TITLE to movie.title
         )
 
-        navController().navigate(R.id.action_movieFragment_to_movieDetailFragment, bundle, null, extras)
-    }
-
-    private fun setActionBar() {
-        (activity as AppCompatActivity).supportActionBar.let { actionBar ->
-            actionBar?.apply {
-                title = getString(R.string.app_name)
-                setDisplayHomeAsUpEnabled(false)
-                setDisplayShowHomeEnabled(false)
-            }
-        }
+        navController().navigate(
+            R.id.action_movieFragment_to_movieDetailFragment,
+            bundle,
+            null,
+            extras
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

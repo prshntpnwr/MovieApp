@@ -20,7 +20,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
-@Module(includes = [(ViewModelModule::class)])
+@Module(includes = [
+    (ViewModelModule::class),
+    (NetworkModule::class)
+])
 class AppModule {
 
     // database injection
@@ -38,9 +41,6 @@ class AppModule {
     }
 
     @Provides
-    fun provideGson(): Gson = GsonBuilder().create()
-
-    @Provides
     fun provideExecutor(): AppExecutors = AppExecutors()
 
     @Provides
@@ -51,34 +51,5 @@ class AppModule {
     @Singleton
     fun provideAppRepository(webservice: WebService, executor: AppExecutors, dao: AppDao): AppRepository {
         return AppRepository(webservice, executor, dao)
-    }
-
-    @SuppressLint("NewApi")
-    @Provides
-    fun provideOkHttpClient(): OkHttpClient {
-        return OkHttpClient.Builder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
-            .build()
-    }
-
-    @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
-        okHttpClient.sslSocketFactory()
-        return Retrofit.Builder()
-            .baseUrl("https://api.themoviedb.org/3/")
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(LiveDataCallAdapterFactory())
-            .build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideApiWebservice(restAdapter: Retrofit): WebService {
-        val webService = restAdapter.create(WebService::class.java)
-        WebServiceHolder.instance.setAPIService(webService)
-        return webService
     }
 }

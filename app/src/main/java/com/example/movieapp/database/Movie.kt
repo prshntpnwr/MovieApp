@@ -44,5 +44,7 @@ data class Movie(
 	var adult: Boolean? = null,
 
 	@field:SerializedName("vote_count")
-	var voteCount: Double? = null
+	var voteCount: Double? = null,
+
+	var category: Int = 0
 )

@@ -27,7 +27,7 @@ data class MovieDetail(
     var backdropPath: String? = null,
 
     @field:SerializedName("revenue")
-    var revenue: Int? = null,
+    var revenue: Long? = null,
 
     @field:SerializedName("popularity")
     var popularity: Double? = null,
@@ -36,7 +36,7 @@ data class MovieDetail(
     var voteCount: Double? = null,
 
     @field:SerializedName("budget")
-    var budget: Int? = null,
+    var budget: Long? = null,
 
     @field:SerializedName("overview")
     var overview: String? = null,

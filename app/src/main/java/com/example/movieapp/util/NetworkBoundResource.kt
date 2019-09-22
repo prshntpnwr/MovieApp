@@ -1,9 +1,11 @@
 package com.example.movieapp.util
 
+import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import com.google.gson.Gson
 
 abstract class NetworkBoundResource<ResultType, RequestType> @MainThread constructor(
     val appExecutors: AppExecutors
@@ -28,6 +30,7 @@ abstract class NetworkBoundResource<ResultType, RequestType> @MainThread constru
     private fun fetchFromNetwork(dbSource: LiveData<ResultType>) {
         val apiResponse = createCall()
         // we re-attach dbSource as a new source, it will dispatch its latest value quickly
+        Log.e(Thread.currentThread().name, "create_call: ${Gson().toJson(apiResponse)}")
 
         result.addSource(dbSource) { resultType ->
             result.value = Resource.loading(resultType)

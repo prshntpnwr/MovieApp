@@ -16,16 +16,15 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import androidx.transition.ChangeBounds
 import androidx.transition.TransitionInflater
 import com.example.movieapp.R
 import com.example.movieapp.binding.FragmentDataBindingComponent
 import com.example.movieapp.databinding.MovieDetailFragmentBinding
 import com.example.movieapp.di.Injectable
 import com.example.movieapp.observer.MovieDetailViewModel
-import com.example.movieapp.util.AppExecutors
-import com.example.movieapp.util.ConverterUtil
-import com.example.movieapp.util.Resource
-import com.example.movieapp.util.Status
+import com.example.movieapp.util.*
+import com.google.gson.Gson
 import javax.inject.Inject
 
 class MovieDetailFragment : Fragment(), Injectable {
@@ -46,8 +45,10 @@ class MovieDetailFragment : Fragment(), Injectable {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        sharedElementEnterTransition =
-            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+        val transition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+        sharedElementEnterTransition = ChangeBounds().apply { enterTransition = transition }
+
+        sharedElementReturnTransition = ChangeBounds().apply { returnTransition = transition }
     }
 
     override fun onCreateView(
@@ -65,7 +66,14 @@ class MovieDetailFragment : Fragment(), Injectable {
             it.converter = ConverterUtil()
             it.lifecycleOwner = this
             binding = it
-            return binding.root
+//            sharedElementEnterTransition = ChangeBounds().apply {
+//                duration = 750
+//            }
+//            sharedElementReturnTransition= ChangeBounds().apply {
+//                duration = 750
+//            }
+        }.run {
+            return this.root
         }
     }
 
@@ -73,32 +81,21 @@ class MovieDetailFragment : Fragment(), Injectable {
         super.onActivityCreated(savedInstanceState)
         movieId = savedInstanceState?.getInt(MOVIE_ID) ?: arguments?.getInt(MOVIE_ID) ?: 0
         movieTitle = savedInstanceState?.getString(MOVIE_TITLE) ?: arguments?.getString(MOVIE_TITLE)
-
-        viewModel.also {
-            it.init(refID = movieId)
-            it.result.observe(this, Observer { res ->
+        viewModel.apply {
+            init(refID = movieId)
+            result.observe(this@MovieDetailFragment, Observer { res ->
+                Log.e(Thread.currentThread().name, "details: ${Gson().toJson(res)}")
                 binding.status = res.status
                 binding.item = res?.data
-                setActionBar()
+                setActionBar(movieTitle ?: getString(R.string.details))
                 if (res.status == Status.SUCCESS && res?.data == null)
                     binding.status = Status.ERROR
 
                 if (res?.status == Status.ERROR)
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.generalError),
-                        Toast.LENGTH_LONG
-                    ).show()
+                    showToast(getString(R.string.generalError))
             })
         }
-    }
 
-    private fun setActionBar() {
-        (activity as MainActivity).supportActionBar?.apply {
-            title = movieTitle ?: getString(R.string.details)
-            setDisplayHomeAsUpEnabled(true)
-            setDisplayShowHomeEnabled(true)
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

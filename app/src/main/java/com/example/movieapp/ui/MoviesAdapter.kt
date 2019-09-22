@@ -3,6 +3,7 @@ package com.example.movieapp.ui
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
@@ -40,6 +41,7 @@ class MoviesAdapter(
             ).also { b ->
                 b.root.setOnClickListener {
                     b.item?.let {
+                        b.posterImage.transitionName = parent.context.getString(R.string.transition_name_poster) + it.id
                         callback?.invoke(it, b.posterImage)
                     }
                 }

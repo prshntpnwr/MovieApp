@@ -5,9 +5,12 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 @Database(
-    entities = [(Movie::class), (MovieDetail::class)],
-    version = 1,
-    exportSchema = false
+    entities = [
+        (Movie::class),
+        (MovieDetail::class),
+        (MovieTrailer::class)
+    ],
+    version = 1, exportSchema = false
 )
 @TypeConverters(ConverterFactory::class)
 abstract class AppDatabase : RoomDatabase() {
