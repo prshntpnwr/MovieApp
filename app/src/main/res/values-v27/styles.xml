@@ -1,9 +1,9 @@
 <resources>
 
     <style name="AppTheme" parent="BaseTheme">
-        <item name="android:navigationBarColor">@android:color/white</item>
+        <item name="android:navigationBarColor">@color/colorSurface</item>
         <item name="android:windowLightNavigationBar">true</item>
-        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+<!--        <item name="android:statusBarColor">@color/colorPrimaryDark</item>-->
     </style>
 
 </resources>

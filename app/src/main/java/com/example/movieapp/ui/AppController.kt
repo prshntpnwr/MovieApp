@@ -3,6 +3,7 @@ package com.example.movieapp.ui
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDex
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -19,6 +20,7 @@ class AppController : Application(), HasActivityInjector {
         super.onCreate()
         instance = this
         AppInjector.init(this)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
     }
 
     override fun attachBaseContext(base: Context) {

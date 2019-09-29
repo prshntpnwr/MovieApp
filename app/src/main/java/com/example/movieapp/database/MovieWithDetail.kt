@@ -5,12 +5,11 @@ import androidx.room.Relation
 
 class MovieWithDetail {
     @Embedded
-    var movie: Movie? = null
-
-    @Relation(parentColumn = "id", entityColumn = "id")
-    var detail: List<MovieDetail>? = null
+    var movie: MovieDetail? = null
 
     @Relation(parentColumn = "id", entityColumn = "movieId")
     var trailers: List<MovieTrailer>? = null
 
+    @Relation(parentColumn = "id", entityColumn = "movieId")
+    var reviews: List<Reviews>? = null
 }

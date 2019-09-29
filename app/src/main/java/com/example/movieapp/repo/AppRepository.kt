@@ -54,59 +54,51 @@ class AppRepository @Inject constructor(
         }.asLiveData()
     }
 
-    fun fetchMovieDetails(id: Int): LiveData<Resource<MovieDetail>> {
-        return object : NetworkBoundResource<MovieDetail, MovieDetail>(executor) {
+    fun fetchMovieWithDetails(movieId: Int): LiveData<Resource<MovieWithDetail>> {
+        Log.e(Thread.currentThread().name, "fetch_detail")
+        return object : NetworkBoundResource<MovieWithDetail, MovieDetail>(executor) {
             override fun saveCallResult(item: MovieDetail) {
                 dao.insertMovieDetails(item = item)
             }
 
-            override fun shouldFetch(data: MovieDetail?) = data == null
+            override fun shouldFetch(data: MovieWithDetail?) = data == null
 
-            override fun loadFromDb() = dao.fetchMovieDetails(id = id)
+            override fun loadFromDb() = dao.loadMovieWithDetail(id = movieId)
 
-            override fun createCall() = webservice.fetchMovieDetails(id = id)
+            override fun createCall() = webservice.fetchMovieDetails(id = movieId)
 
         }.asLiveData()
     }
 
     fun fetchMovieTrailer(movieId: Int): LiveData<Resource<List<MovieTrailer>>> {
+        Log.e(Thread.currentThread().name, "fetch_trailer")
         return object : NetworkBoundResource<List<MovieTrailer>, TrailerResponse>(executor) {
             override fun saveCallResult(item: TrailerResponse) {
                 dao.insertMovieTrailerList(item)
             }
 
-            override fun shouldFetch(data: List<MovieTrailer>?): Boolean {
-                return data.isNullOrEmpty()
-            }
+            override fun shouldFetch(data: List<MovieTrailer>?) = data.isNullOrEmpty()
 
-            override fun loadFromDb(): LiveData<List<MovieTrailer>> {
-                return dao.loadMovieTrailers(movieId)
-            }
+            override fun loadFromDb() = dao.loadMovieTrailer(movieId = movieId)
 
-            override fun createCall(): LiveData<ApiResponse<TrailerResponse>> {
-                return webservice.fetchMovieTrailers(movieId)
-            }
+            override fun createCall() =  webservice.fetchMovieTrailers(movieId)
+
         }.asLiveData()
     }
 
-    fun fetchMovieWithDetails(movieId: Int): LiveData<Resource<List<MovieWithDetail>>> {
-        return object : NetworkBoundResource<List<MovieWithDetail>, TrailerResponse>(executor) {
-            override fun saveCallResult(item: TrailerResponse) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun fetchMovieReviews(movieId: Int): LiveData<Resource<List<Reviews>>> {
+        Log.e(Thread.currentThread().name, "fetch_review")
+        return object : NetworkBoundResource<List<Reviews>, ReviewsResponse>(executor) {
+            override fun saveCallResult(item: ReviewsResponse) {
+                dao.insertReviewList(item)
             }
 
-            override fun shouldFetch(data: List<MovieWithDetail>?): Boolean {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
+            override fun shouldFetch(data: List<Reviews>?) = data.isNullOrEmpty()
 
-            override fun loadFromDb(): LiveData<List<MovieWithDetail>> {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
+            override fun loadFromDb() = dao.loadMovieReviews(movieId = movieId)
 
-            override fun createCall(): LiveData<ApiResponse<TrailerResponse>> {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
+            override fun createCall() = webservice.fetchMovieReview(movieId)
+
         }.asLiveData()
     }
-
 }

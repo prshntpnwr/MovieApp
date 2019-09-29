@@ -6,20 +6,19 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.library.baseAdapters.BR
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionInflater
 import com.example.movieapp.R
 import com.example.movieapp.binding.FragmentDataBindingComponent
+import com.example.movieapp.database.MovieDetail
 import com.example.movieapp.databinding.MovieDetailFragmentBinding
 import com.example.movieapp.di.Injectable
 import com.example.movieapp.observer.MovieDetailViewModel
@@ -30,10 +29,15 @@ import javax.inject.Inject
 class MovieDetailFragment : Fragment(), Injectable {
 
     @Inject
+    lateinit var executors: AppExecutors
+
+    @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val viewModel: MovieDetailViewModel by viewModels { viewModelFactory }
     private val dataBindingComponent: DataBindingComponent by lazy { FragmentDataBindingComponent(this) }
+    private val trailerAdapter by lazy { TrailersAdapter(dataBindingComponent, executors, null) }
+    private val reviewAdapter by lazy { ReviewAdapter(dataBindingComponent, executors, null) }
     private lateinit var binding: MovieDetailFragmentBinding
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -47,7 +51,6 @@ class MovieDetailFragment : Fragment(), Injectable {
         setHasOptionsMenu(true)
         val transition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
         sharedElementEnterTransition = ChangeBounds().apply { enterTransition = transition }
-
         sharedElementReturnTransition = ChangeBounds().apply { returnTransition = transition }
     }
 
@@ -62,16 +65,11 @@ class MovieDetailFragment : Fragment(), Injectable {
             container,
             false,
             dataBindingComponent
-        ).also {
-            it.converter = ConverterUtil()
-            it.lifecycleOwner = this
-            binding = it
-//            sharedElementEnterTransition = ChangeBounds().apply {
-//                duration = 750
-//            }
-//            sharedElementReturnTransition= ChangeBounds().apply {
-//                duration = 750
-//            }
+        ).apply {
+            lifecycleOwner = this@MovieDetailFragment
+            viewPagerTrailer.adapter = trailerAdapter
+            rvReview.adapter = reviewAdapter
+            binding = this
         }.run {
             return this.root
         }
@@ -81,25 +79,26 @@ class MovieDetailFragment : Fragment(), Injectable {
         super.onActivityCreated(savedInstanceState)
         movieId = savedInstanceState?.getInt(MOVIE_ID) ?: arguments?.getInt(MOVIE_ID) ?: 0
         movieTitle = savedInstanceState?.getString(MOVIE_TITLE) ?: arguments?.getString(MOVIE_TITLE)
+        setActionBar(movieTitle ?: getString(R.string.details))
         viewModel.apply {
             init(refID = movieId)
+            binding.viewModel = this
             result.observe(this@MovieDetailFragment, Observer { res ->
-                Log.e(Thread.currentThread().name, "details: ${Gson().toJson(res)}")
-                binding.status = res.status
-                binding.item = res?.data
-                setActionBar(movieTitle ?: getString(R.string.details))
-                if (res.status == Status.SUCCESS && res?.data == null)
-                    binding.status = Status.ERROR
-
+                Log.e(Thread.currentThread().name, "details: $movieId ${Gson().toJson(res)}")
+                notifyViews()
+                trailerAdapter.submitList(res?.data?.trailers)
+                reviewAdapter.submitList(res?.data?.reviews)
                 if (res?.status == Status.ERROR)
                     showToast(getString(R.string.generalError))
             })
-        }
 
+            trailer.observe(this@MovieDetailFragment, Observer { })
+            review.observe(this@MovieDetailFragment, Observer { })
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) findNavController().popBackStack()
+        if (item.itemId == android.R.id.home) findNavController().navigateUp()
         return super.onOptionsItemSelected(item)
     }
 
@@ -108,5 +107,8 @@ class MovieDetailFragment : Fragment(), Injectable {
         var movieTitle: String? = null
         const val MOVIE_ID = "movie_id"
         const val MOVIE_TITLE = "movie_title"
+
+        const val CALL_DETAIL = 0
+        const val CALL_TRAILER = 1
     }
 }

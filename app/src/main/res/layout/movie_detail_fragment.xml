@@ -9,16 +9,8 @@
         <import type="com.example.movieapp.util.Status"/>
 
         <variable
-                name="item"
-                type="com.example.movieapp.database.MovieDetail"/>
-
-        <variable
-                name="status"
-                type="com.example.movieapp.util.Status"/>
-
-        <variable
-                name="converter"
-                type="com.example.movieapp.util.ConverterUtil"/>
+                name="viewModel"
+                type="com.example.movieapp.observer.MovieDetailViewModel"/>
 
     </data>
 
@@ -33,52 +25,48 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:viewVisible="@{status == Status.SUCCESS}">
+                    app:viewVisible="@{viewModel.detailStatus == Status.SUCCESS}">
 
                 <ImageView
                         android:id="@+id/backdrop"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/backdrop_height"
                         android:scaleType="centerCrop"
-                        android:background="@color/colorPrimaryDark"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:imageUrl="@{item.backdropPath}"/>
+                        app:imageUrl="@{viewModel.movieDetail.backdropUrl}"/>
 
                 <ImageView
                         android:id="@+id/poster"
                         android:layout_width="@dimen/poster_width"
                         android:layout_height="@dimen/poster_height"
                         android:scaleType="centerCrop"
-                        android:background="@color/colorPrimaryDark"
                         android:layout_margin="@dimen/activity_margin_mid"
                         android:layout_marginTop="@dimen/activity_margin_mid"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/backdrop"
-                        app:imageUrl="@{item.posterPath}"
+                        app:imageUrl="@{viewModel.movieDetail.posterUrl}"
                         app:layout_constraintBottom_toBottomOf="@id/backdrop"/>
 
                 <TextView
                         android:id="@+id/rating"
-                        style="@style/Base.TextAppearance.AppCompat.Medium"
+                        style="@style/AppTextAppearance.Medium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/secondary_text"
                         android:drawableLeft="@drawable/avd_rated_dark"
                         android:drawablePadding="@dimen/padding_mid"
-                        android:drawableTint="@color/secondary_text"
-                        android:fontFamily="@font/montserrat_medium"
                         android:layout_margin="@dimen/activity_horizontal_margin"
                         android:layout_marginLeft="@dimen/activity_margin_mid"
                         android:layout_marginStart="@dimen/activity_margin_mid"
-                        android:gravity="center"
-                        android:text='@{" "+item.voteAverage+" "}'
+                        android:gravity="center_vertical"
+                        android:text='@{" "+ viewModel.movieDetail.voteAverage}'
                         app:layout_constraintTop_toBottomOf="@id/backdrop"
                         app:layout_constraintStart_toStartOf="parent"
                         tools:text="9.3"/>
 
                 <TextView
+                        style="@style/AppTextAppearance.Body2"
                         android:id="@+id/category"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -87,32 +75,28 @@
                         android:layout_marginStart="@dimen/activity_margin_mid"
                         android:layout_marginEnd="@dimen/activity_margin_mid"
                         android:layout_marginRight="@dimen/activity_margin_mid"
-                        android:drawableTint="@color/secondary_text"
-                        android:fontFamily="@font/montserrat_medium"
                         android:textColor="@color/secondary_text"
                         app:layout_constraintEnd_toStartOf="@id/poster"
                         app:layout_constraintStart_toStartOf="@id/rating"
                         app:layout_constraintTop_toBottomOf="@id/rating"
-                        app:genresList="@{item.genres}"
+                        app:genresList="@{viewModel.movieDetail.genres}"
                         tools:text="Drama | Action | Thriller"/>
 
                 <TextView
                         android:id="@+id/language"
-                        style="@style/Base.TextAppearance.AppCompat.Body1"
+                        style="@style/AppTextAppearance.Primary.Body1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/card_raised_elevation"
                         android:paddingStart="@dimen/card_raised_elevation"
                         android:paddingEnd="@dimen/card_raised_elevation"
                         android:paddingRight="@dimen/card_raised_elevation"
-                        android:gravity="end"
-                        android:fontFamily="@font/montserrat_regular"
                         android:background="@android:drawable/ic_notification_overlay"
                         android:textColor="@android:color/white"
                         android:layout_marginTop="@dimen/activity_margin_mid"
                         android:layout_marginBottom="@dimen/activity_vertical_margin"
                         app:layout_constraintVertical_bias="0"
-                        app:upperString="@{item.originalLanguage}"
+                        app:upperString="@{viewModel.movieDetail.originalLanguage}"
                         app:layout_constraintEnd_toEndOf="@id/rating"
                         app:layout_constraintTop_toBottomOf="@id/category"
                         app:layout_constraintStart_toStartOf="@id/category"
@@ -121,90 +105,140 @@
 
                 <TextView
                         android:id="@+id/overview_title"
-                        style="@style/Base.TextAppearance.AppCompat.Title"
+                        style="@style/AppTextAppearance.Primary.Body1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/activity_margin_small"
-                        android:text="@string/synopsis"
-                        android:fontFamily="@font/montserrat_medium"
+                        android:layout_margin="@dimen/activity_margin_mid"
                         android:drawableLeft="@drawable/avd_subject"
                         android:drawablePadding="@dimen/margin_text_vertical"
-                        android:textColor="@color/primary_text"
-                        android:layout_margin="@dimen/activity_margin_mid"
-                        app:layout_constraintTop_toBottomOf="@id/language"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        android:gravity="center_vertical"
+                        android:text="@string/synopsis"
                         app:layout_constraintBottom_toTopOf="@id/overview"
-                        tools:text="@string/synopsis"/>
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/rating"
+                        app:layout_constraintTop_toBottomOf="@id/language"
+                        tools:text="@string/synopsis" />
 
                 <TextView
                         android:id="@+id/overview"
-                        style="@style/Base.TextAppearance.AppCompat.Body1"
+                        style="@style/AppTextAppearance.Secondary.Body1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/activity_margin_mid"
-                        android:text="@{item.overview}"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:textColor="@color/secondary_text"
+                        android:layout_marginTop="@dimen/activity_margin_mid"
                         android:padding="@dimen/padding_small"
-                        app:layout_constraintStart_toStartOf="@id/overview_title"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        android:text="@{viewModel.movieDetail.overview}"
+                        app:layout_constraintEnd_toEndOf="@+id/overview_title"
+                        app:layout_constraintStart_toStartOf="@+id/rating"
                         app:layout_constraintTop_toBottomOf="@id/overview_title"
-                        tools:text="The movie start where no one expected it to start. In the middle of nowhere basically."/>
+                        tools:text="The movie start where no one expected it to start. In the middle of nowhere basically." />
 
                 <TextView
                         android:id="@+id/minutes"
-                        style="@style/Base.TextAppearance.AppCompat.Body1"
-                        android:fontFamily="@font/montserrat_light"
+                        style="@style/AppTextAppearance.Secondary.Body1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/activity_horizontal_margin"
-                        android:gravity="center"
                         android:drawableLeft="@drawable/avd_access_time_dark"
                         android:drawablePadding="@dimen/padding_mid"
-                        android:drawableTint="@color/secondary_text"
-                        android:text='@{item.runtime != null ? (item.runtime + " " + @string/minutes) : @string/empty_text}'
-                        android:textColor="@color/secondary_text"
                         android:layout_marginStart="@dimen/activity_margin_mid"
                         android:layout_marginLeft="@dimen/activity_margin_mid"
                         android:layout_marginTop="@dimen/activity_margin_mid"
+                        app:hourMinute="@{viewModel.movieDetail.runtime}"
                         app:layout_constraintTop_toBottomOf="@+id/overview"
                         app:layout_constraintStart_toStartOf="@+id/overview"
                         app:layout_constraintEnd_toStartOf="@id/release_date"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toTopOf="@+id/trailer_title"
                         tools:text="142 minutes"/>
 
                 <TextView
                         android:id="@+id/release_date"
-                        style="@style/Base.TextAppearance.AppCompat.Subhead"
+                        style="@style/AppTextAppearance.Secondary.Body1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/activity_horizontal_margin"
-                        android:gravity="center"
-                        android:fontFamily="@font/montserrat_light"
-                        android:textColor="@color/secondary_text"
                         android:drawableLeft="@drawable/avd_event_dark"
                         android:drawablePadding="@dimen/padding_mid"
-                        android:drawableTint="@color/secondary_text"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/overview"
                         app:layout_constraintStart_toEndOf="@id/minutes"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:timeStamp="@{item.releaseDate}"
+                        app:timeStamp="@{viewModel.movieDetail.releaseDate}"
                         app:format="@{@string/date_format}"
                         app:emptyTxt="@{@string/empty_text}"
                         tools:text="21 April 2018"/>
+
+                <TextView
+                        android:id="@+id/trailer_title"
+                        style="@style/AppTextAppearance.Primary.Body1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/activity_horizontal_margin"
+                        android:drawableLeft="@drawable/avd_clip"
+                        android:drawablePadding="@dimen/margin_text_vertical"
+                        android:gravity="center_vertical"
+                        android:text="@string/trailer"
+                        app:viewVisible="@{viewModel.trailerVisible}"
+                        app:layout_constraintBottom_toTopOf="@id/view_Pager_trailer"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/overview_title"
+                        app:layout_constraintTop_toBottomOf="@id/minutes"
+                        tools:text="@string/trailer" />
+
+                <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/view_Pager_trailer"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/view_pager_height"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_marginBottom="@dimen/activity_margin_mid"
+                        app:viewVisible="@{viewModel.trailerVisible}"
+                        app:layout_constraintTop_toBottomOf="@id/trailer_title"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/review_title_text_view"/>
+
+                <TextView
+                        android:id="@+id/review_title_text_view"
+                        style="@style/AppTextAppearance.Primary.Body1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/activity_horizontal_margin"
+                        android:drawableLeft="@drawable/avd_announcement_black"
+                        android:drawablePadding="@dimen/margin_text_vertical"
+                        android:gravity="center_vertical"
+                        android:text="@string/reviews"
+                        app:viewVisible="@{viewModel.reviewsVisible}"
+                        app:layout_constraintTop_toBottomOf="@id/view_Pager_trailer"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/overview_title"
+                        app:layout_constraintBottom_toTopOf="@id/rv_review"
+                        tools:text="@string/reviews" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_review"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/material_component_cards_padding"
+                        android:clipToPadding="false"
+                        android:layout_marginTop="@dimen/activity_margin_mid"
+                        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:viewVisible="@{viewModel.reviewsVisible}"
+                        app:layout_constraintTop_toBottomOf="@id/review_title_text_view"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/overview_title"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        tools:listitem="@layout/list_item_review"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <include
                     android:id="@+id/progress"
                     layout="@layout/layout_loading"
-                    app:status="@{status}"/>
+                    app:status="@{viewModel.detailStatus}"/>
 
             <include
                     layout="@layout/layout_empty"
-                    app:status="@{status}"
+                    app:status="@{viewModel.detailStatus}"
                     app:displayText="@{@string/image_description}"/>
 
         </FrameLayout>

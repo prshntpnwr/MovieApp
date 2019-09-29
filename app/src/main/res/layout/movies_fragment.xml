@@ -5,13 +5,11 @@
 
     <data>
 
-        <import type="android.view.View"/>
-
         <import type="com.example.movieapp.util.Status"/>
 
         <variable
-                name="status"
-                type="com.example.movieapp.util.Status"/>
+                name="viewModel"
+                type="com.example.movieapp.observer.MoviesViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,7 +21,7 @@
                 layout="@layout/layout_loading"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:status="@{status}"/>
+                app:status="@{viewModel.listStatus}"/>
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_movies"
@@ -33,7 +31,7 @@
                 android:padding="@dimen/material_component_cards_padding"
                 android:clipToPadding="false"
                 app:spanCount="3"
-                app:viewVisible="@{status == Status.SUCCESS}"
+                app:viewVisible="@{viewModel.listStatus == Status.SUCCESS}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +40,7 @@
 
         <include
                 layout="@layout/layout_empty"
-                app:status="@{status}"
+                app:status="@{viewModel.listStatus}"
                 app:displayText="@{@string/image_description}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

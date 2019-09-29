@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+                name="item"
+                type="com.example.movieapp.database.MovieTrailer" />
+
+    </data>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:selectableItemBackground">
+
+            <ImageView
+                    android:id="@+id/trailer_preview_image"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/poster_trailer_width"
+                    android:scaleType="fitXY"
+                    app:imageUrl="@{item.getTrailerPreview()}"
+                    app:layout_constraintBottom_toTopOf="@id/title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    tools:ignore="ContentDescription" />
+
+            <ImageView
+                    android:layout_width="@dimen/image_view_size"
+                    android:layout_height="@dimen/image_view_size"
+                    android:elevation="@dimen/material_card_elevation_small"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintBottom_toBottomOf="@id/trailer_preview_image"
+                    app:layout_constraintEnd_toEndOf="@id/trailer_preview_image"
+                    app:layout_constraintStart_toStartOf="@id/trailer_preview_image"
+                    app:layout_constraintTop_toTopOf="@id/trailer_preview_image"
+                    app:srcCompat="@drawable/avd_play_circle_filled"
+                    tools:ignore="ContentDescription" />
+
+            <TextView
+                    android:id="@+id/title"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/activity_vertical_margin"
+                    android:layout_marginTop="@dimen/activity_margin_mid"
+                    android:layout_marginEnd="@dimen/activity_vertical_margin"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:maxLines="2"
+                    android:text="@{item.title}"
+                    android:textColor="@color/primary_text"
+                    app:layout_constraintBottom_toTopOf="@id/subtitle_text"
+                    app:layout_constraintEnd_toEndOf="@id/trailer_preview_image"
+                    app:layout_constraintStart_toStartOf="@id/trailer_preview_image"
+                    app:layout_constraintTop_toBottomOf="@id/trailer_preview_image"
+                    tools:text="THE OLD MAN THE GUN | Official Trailer [HD] | FOX Searchlight" />
+
+            <TextView
+                    android:id="@+id/subtitle_text"
+                    style="@style/Base.TextAppearance.AppCompat.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_margin_mid"
+                    android:layout_marginBottom="@dimen/activity_margin_mid"
+                    android:fontFamily="@font/montserrat_light"
+                    android:text="@{item.subTitle}"
+                    android:textColor="@color/secondary_text"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/title"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toStartOf="@id/title"
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    tools:text="YouTube • 1080p" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

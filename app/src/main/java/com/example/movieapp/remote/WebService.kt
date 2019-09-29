@@ -3,6 +3,7 @@ package com.example.movieapp.remote
 import androidx.lifecycle.LiveData
 import com.example.movieapp.database.MovieDetail
 import com.example.movieapp.database.MoviesResponse
+import com.example.movieapp.database.ReviewsResponse
 import com.example.movieapp.database.TrailerResponse
 import com.example.movieapp.util.ApiResponse
 import retrofit2.http.GET
@@ -27,4 +28,9 @@ interface WebService {
     fun fetchMovieTrailers(
         @Path("id") id: Int
     ): LiveData<ApiResponse<TrailerResponse>>
+
+    @GET("movie/{id}/reviews")
+    fun fetchMovieReview(
+        @Path("id") id: Int
+    ): LiveData<ApiResponse<ReviewsResponse>>
 }

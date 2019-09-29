@@ -45,7 +45,7 @@ data class MovieDetail(
     var originalTitle: String? = null,
 
     @field:SerializedName("runtime")
-    var runtime: String? = null,
+    var runtime: Long? = null,
 
     @field:SerializedName("poster_path")
     var posterPath: String? = null,
@@ -70,4 +70,9 @@ data class MovieDetail(
 
     @field:SerializedName("genres")
     var genres: MutableList<MovieGenre?>? = null
-)
+) {
+
+    fun getPosterUrl() = "https://image.tmdb.org/t/p/w500$posterPath"
+
+    fun getBackdropUrl() = "https://image.tmdb.org/t/p/w500$backdropPath"
+}

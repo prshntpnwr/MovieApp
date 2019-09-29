@@ -23,10 +23,7 @@ import com.example.movieapp.di.Injectable
 import com.example.movieapp.observer.MoviesViewModel
 import com.example.movieapp.ui.MovieDetailFragment.Companion.MOVIE_ID
 import com.example.movieapp.ui.MovieDetailFragment.Companion.MOVIE_TITLE
-import com.example.movieapp.util.AppExecutors
-import com.example.movieapp.util.Status
-import com.example.movieapp.util.setActionBar
-import com.example.movieapp.util.showToast
+import com.example.movieapp.util.*
 import com.google.gson.Gson
 import javax.inject.Inject
 
@@ -60,6 +57,9 @@ class MoviesFragment : Fragment(), Injectable {
             false,
             dataBindingComponent
         ).also {
+            it.viewModel = viewModel
+            it.rvMovies.adapter = adapter
+            it.lifecycleOwner = this
             binding = it
         }.run {
             return this.root
@@ -69,23 +69,14 @@ class MoviesFragment : Fragment(), Injectable {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setActionBar(getString(R.string.app_name))
-        binding.apply {
-            rvMovies.adapter = adapter
-            lifecycleOwner = this@MoviesFragment
-        }
 
         viewModel.apply {
             fetchTask(FILTER_TRENDY)
             result.observe(this@MoviesFragment, Observer { res ->
-                binding.status = res.status
                 adapter.submitList(res?.data)
                 updateFetch(flag = false)
                 Log.e(Thread.currentThread().name, "movies: ${Gson().toJson(res)}")
-                when (res?.status) {
-                    Status.SUCCESS -> if (res.data?.size == 0) binding.status = Status.ERROR
-                    Status.ERROR -> showToast(res.message ?: "")
-                    Status.LOADING -> { }
-                }
+                if (res?.status == Status.ERROR) showSnackBar(res.message ?: "")
             })
         }
     }

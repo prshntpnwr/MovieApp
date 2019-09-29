@@ -8,7 +8,8 @@ import androidx.room.TypeConverters
     entities = [
         (Movie::class),
         (MovieDetail::class),
-        (MovieTrailer::class)
+        (MovieTrailer::class),
+        (Reviews::class)
     ],
     version = 1, exportSchema = false
 )

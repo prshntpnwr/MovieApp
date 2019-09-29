@@ -46,5 +46,7 @@ data class Movie(
 	@field:SerializedName("vote_count")
 	var voteCount: Double? = null,
 
-	var category: Int = 0
-)
+	var category: Int? = null
+) {
+	fun getPosterUrl() = "https://image.tmdb.org/t/p/w500$posterPath"
+}

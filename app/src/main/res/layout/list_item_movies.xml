@@ -12,22 +12,12 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:selectableItemBackground"
             android:padding="@dimen/material_component_cards_padding">
-
-        <com.google.android.material.card.MaterialCardView
-                android:id="@+id/poster"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:cardCornerRadius="@dimen/material_card_radius_mid"
-                android:layout_margin="@dimen/activity_margin_small">
 
             <ImageView
                     android:id="@+id/poster_image"
@@ -35,10 +25,15 @@
                     android:layout_height="160dp"
                     android:scaleType="fitXY"
                     android:minWidth="120dp"
+                    android:elevation="8dp"
                     android:layout_gravity="center"
-                    app:imageUrl="@{item.posterPath}"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:imageUrl="@{item.posterUrl}"/>
 
             <TextView
+                    style="@style/Base.TextAppearance.AppCompat.Body1"
                     android:id="@+id/rating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -51,10 +46,9 @@
                     android:drawableLeft="@drawable/avd_rated"
                     android:drawablePadding="@dimen/activity_margin_mid"
                     android:text='@{" "+item.voteAverage+" "}'
-                    style="@style/Base.TextAppearance.AppCompat.Body1"
-                    android:textColor="@android:color/white"/>
-
-        </com.google.android.material.card.MaterialCardView>
+                    android:textColor="@android:color/white"
+                    app:layout_constraintBottom_toBottomOf="@id/poster_image"
+                    app:layout_constraintEnd_toEndOf="@id/poster_image"/>
 
         <TextView
                 android:id="@+id/title"
@@ -66,9 +60,10 @@
                 android:gravity="center"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
-                app:layout_constraintStart_toStartOf="@id/poster"
-                app:layout_constraintTop_toBottomOf="@id/poster"
-                app:layout_constraintEnd_toEndOf="@id/poster"
+                app:layout_goneMarginTop="@dimen/activity_negative_margin_small"
+                app:layout_constraintStart_toStartOf="@id/poster_image"
+                app:layout_constraintTop_toBottomOf="@id/poster_image"
+                app:layout_constraintEnd_toEndOf="@id/poster_image"
                 tools:text="@string/app_name"
                 android:text="@{item.title}"/>
 
@@ -84,9 +79,9 @@
                 android:fontFamily="@font/montserrat_light"
                 android:layout_marginTop="@dimen/activity_margin_small"
                 android:gravity="center"
-                app:layout_constraintStart_toStartOf="@id/poster"
+                app:layout_constraintStart_toStartOf="@id/poster_image"
                 app:layout_constraintTop_toBottomOf="@id/title"
-                app:layout_constraintEnd_toEndOf="@id/poster"
+                app:layout_constraintEnd_toEndOf="@id/poster_image"
                 android:layout_marginBottom="@dimen/activity_margin_small"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 

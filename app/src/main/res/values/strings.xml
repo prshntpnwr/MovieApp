@@ -14,6 +14,9 @@
     <string name="trendy">Trendy</string>
     <string name="top_rated">Top Rated</string>
     <string name="synopsis">Synopsis</string>
+    <string name="trailer">Trailer</string>
+    <string name="reviews">Reviews</string>
     <string name="sort">Sort</string>
     <string name="transition_name_poster">posterImage</string>
+    <string name="hour_minute_abbreviation">%h hr %m min</string>
 </resources>
