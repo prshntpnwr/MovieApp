@@ -31,6 +31,7 @@ class FragmentBindingAdapters @Inject constructor(val fragment: Fragment) {
 
     @BindingAdapter(value = ["imageUrl", "cornerRadius"], requireAll = false)
     fun bindImage(imageView: ImageView, url: String?, radius: Int?) {
+        url ?: return
         val circularProgressDrawable = CircularProgressDrawable(fragment.requireContext())
         circularProgressDrawable.strokeWidth = 5f
         circularProgressDrawable.centerRadius = 30f

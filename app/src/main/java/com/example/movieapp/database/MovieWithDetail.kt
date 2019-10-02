@@ -8,6 +8,9 @@ class MovieWithDetail {
     var movie: MovieDetail? = null
 
     @Relation(parentColumn = "id", entityColumn = "movieId")
+    var cast: List<Cast>? = null
+
+    @Relation(parentColumn = "id", entityColumn = "movieId")
     var trailers: List<MovieTrailer>? = null
 
     @Relation(parentColumn = "id", entityColumn = "movieId")

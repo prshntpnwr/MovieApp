@@ -9,7 +9,8 @@ import androidx.room.TypeConverters
         (Movie::class),
         (MovieDetail::class),
         (MovieTrailer::class),
-        (Reviews::class)
+        (Reviews::class),
+        (Cast::class)
     ],
     version = 1, exportSchema = false
 )

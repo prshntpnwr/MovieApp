@@ -36,7 +36,7 @@ data class MovieTrailer(
     var key: String? = null
 ) {
 
-    fun getTrailerPreview() = "http://img.youtube.com/vi/$key/mqdefault.jpg"
+    fun getTrailerPreview() = if (key == null) key else "http://img.youtube.com/vi/$key/mqdefault.jpg"
 
     fun getTitle() = "$name \u2022 $type"
 

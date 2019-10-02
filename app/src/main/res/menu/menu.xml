@@ -10,7 +10,7 @@
           android:enabled="true"/>
 
     <item android:id="@+id/action_rated"
-          android:icon="@drawable/avd_rated_dark"
+          android:icon="@drawable/avd_rated"
           android:title="@string/top_rated"
           android:orderInCategory="100"
           app:showAsAction="ifRoom|withText"

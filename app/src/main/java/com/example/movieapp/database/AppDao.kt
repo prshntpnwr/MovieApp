@@ -12,10 +12,16 @@ interface AppDao {
     fun loadMovieWithDetail(id: Int): LiveData<MovieWithDetail>
 
     @Query("SELECT * FROM movie_trailer where movieId = :movieId")
-    fun loadMovieTrailer(movieId: Int): LiveData<List<MovieTrailer>>
+    fun loadMovieTrailer(movieId: Int): List<MovieTrailer>
 
     @Query("SELECT * FROM movie_reviews where movieId = :movieId")
-    fun loadMovieReviews(movieId: Int): LiveData<List<Reviews>>
+    fun loadMovieReviews(movieId: Int): List<Reviews>
+
+    @Query("SELECT * FROM movie_cast where movieId = :movieId")
+    fun loadMovieCast(movieId: Int): LiveData<List<Cast>>
+
+    @Query("SELECT * FROM movie_cast where movieId = :movieId")
+    fun loadCast(movieId: Int): List<Cast>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertMovies(list: List<Movie?>?)
@@ -25,6 +31,9 @@ interface AppDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertReviews(items: List<Reviews?>?)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCast(items: List<Cast?>?)
 
     @Query("DELETE FROM movies")
     fun deleteMovies()
@@ -54,5 +63,11 @@ interface AppDao {
     fun insertReviewList(item: ReviewsResponse) {
         item.results?.mapIndexed { _, review -> review?.movieId = item.id ?: 0 }
         insertReviews(item.results)
+    }
+
+    @Transaction
+    fun insertCastList(item: CastResponse) {
+        item.results?.mapIndexed { _, cast -> cast.movieId = item.id ?: 0 }
+        insertCast(item.results)
     }
 }

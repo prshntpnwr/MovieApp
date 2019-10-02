@@ -54,7 +54,7 @@
                         style="@style/AppTextAppearance.Medium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/avd_rated_dark"
+                        android:drawableLeft="@drawable/avd_rated"
                         android:drawablePadding="@dimen/padding_mid"
                         android:layout_margin="@dimen/activity_horizontal_margin"
                         android:layout_marginLeft="@dimen/activity_margin_mid"
@@ -108,7 +108,10 @@
                         style="@style/AppTextAppearance.Primary.Body1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/activity_margin_mid"
+                        android:layout_marginStart="@dimen/activity_margin_mid"
+                        android:layout_marginEnd="@dimen/activity_margin_mid"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
                         android:drawableLeft="@drawable/avd_subject"
                         android:drawablePadding="@dimen/margin_text_vertical"
                         android:gravity="center_vertical"
@@ -147,7 +150,9 @@
                         app:layout_constraintTop_toBottomOf="@+id/overview"
                         app:layout_constraintStart_toStartOf="@+id/overview"
                         app:layout_constraintEnd_toStartOf="@id/release_date"
-                        app:layout_constraintBottom_toTopOf="@+id/trailer_title"
+                        app:layout_constraintVertical_chainStyle="packed"
+                        app:layout_constraintVertical_bias="0"
+                        app:layout_constraintBottom_toTopOf="@+id/cast_title_text_view"
                         tools:text="142 minutes"/>
 
                 <TextView
@@ -167,6 +172,40 @@
                         tools:text="21 April 2018"/>
 
                 <TextView
+                        android:id="@+id/cast_title_text_view"
+                        style="@style/AppTextAppearance.Primary.Body1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/activity_horizontal_margin"
+                        android:drawableLeft="@drawable/avd_people_outline"
+                        android:drawablePadding="@dimen/margin_text_vertical"
+                        android:gravity="center_vertical"
+                        android:text="@string/cast"
+                        app:viewVisible="@{viewModel.castVisible}"
+                        app:layout_constraintBottom_toTopOf="@id/view_Pager_trailer"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/overview_title"
+                        app:layout_constraintTop_toBottomOf="@id/minutes"
+                        tools:text="@string/cast" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_cast"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/material_component_cards_padding"
+                        android:clipToPadding="false"
+                        android:layout_marginTop="@dimen/activity_margin_mid"
+                        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:viewVisible="@{viewModel.castVisible}"
+                        app:layout_constraintTop_toBottomOf="@id/cast_title_text_view"
+                        app:layout_constraintBottom_toTopOf="@id/trailer_title"
+                        app:layout_constraintStart_toStartOf="@id/overview_title"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        tools:listitem="@layout/list_item_cast"/>
+
+                <TextView
                         android:id="@+id/trailer_title"
                         style="@style/AppTextAppearance.Primary.Body1"
                         android:layout_width="0dp"
@@ -180,7 +219,7 @@
                         app:layout_constraintBottom_toTopOf="@id/view_Pager_trailer"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/overview_title"
-                        app:layout_constraintTop_toBottomOf="@id/minutes"
+                        app:layout_constraintTop_toBottomOf="@id/rv_cast"
                         tools:text="@string/trailer" />
 
                 <androidx.viewpager2.widget.ViewPager2

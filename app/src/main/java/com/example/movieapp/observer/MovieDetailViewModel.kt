@@ -19,8 +19,8 @@ import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 class MovieDetailViewModel @Inject constructor(
-    val repo: AppRepository
-) : ViewModel(), Observable {
+    private val repo: AppRepository
+) : ViewModel(), Observable, CoroutineScope {
 
     private val _refID: MutableLiveData<RepoID> = MutableLiveData()
     val refID: LiveData<RepoID>
@@ -33,28 +33,17 @@ class MovieDetailViewModel @Inject constructor(
         @Bindable get() = result.value?.data?.trailers?.isNullOrEmpty() == false
     val reviewsVisible: Boolean?
         @Bindable get() = result.value?.data?.reviews?.isNullOrEmpty() == false
+    val castVisible: Boolean?
+        @Bindable get() = result.value?.data?.cast?.isNullOrEmpty() == false
 
     val result: LiveData<Resource<MovieWithDetail>> = Transformations
         .switchMap(_refID) { input ->
-            input.ifExists { id, _ -> repo.fetchMovieWithDetails(movieId = id) }
-        }
-
-    private val _refID1: MutableLiveData<RepoID> = MutableLiveData()
-    val trailer: LiveData<Resource<List<MovieTrailer>>> = Transformations
-        .switchMap(_refID1) { input ->
-            input.ifExists { id, _ -> repo.fetchMovieTrailer(movieId = id) }
-        }
-
-    private val _refID2: MutableLiveData<RepoID> = MutableLiveData()
-    val review: LiveData<Resource<List<Reviews>>> = Transformations
-        .switchMap(_refID2) { input ->
-            input.ifExists { id, _ -> repo.fetchMovieReviews(movieId = id) }
+            input.ifExists { id -> repo.fetchMovieWithDetails(movieId = id) }
         }
 
     fun init(refID: Int) {
-        _refID.postValue(RepoID(refID, CALL_DETAIL))
-        _refID1.postValue(RepoID(refID, CALL_TRAILER))
-        _refID2.postValue(RepoID(refID, 3))
+        _refID.postValue(RepoID(refID))
+        repo.fetchMovieData(refID, this)
     }
 
     fun notifyViews() {
@@ -62,14 +51,15 @@ class MovieDetailViewModel @Inject constructor(
         notifyPropertyChanged(BR.movieDetail)
         notifyPropertyChanged(BR.trailerVisible)
         notifyPropertyChanged(BR.reviewsVisible)
+        notifyPropertyChanged(BR.castVisible)
     }
 
-    data class RepoID(val refID: Int?, val call: Int) {
-        fun <T> ifExists(f: (Int, Int) -> LiveData<T>): LiveData<T> {
+    data class RepoID(val refID: Int?) {
+        fun <T> ifExists(f: (Int) -> LiveData<T>): LiveData<T> {
             return if (refID == null) {
                 AbsentedLiveData.create()
             } else {
-                f(refID, call)
+                f(refID)
             }
         }
     }
@@ -109,64 +99,66 @@ class MovieDetailViewModel @Inject constructor(
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Coroutines
     ////////////////////////////////////////////////////////////////////////////////////////////////
-//    private val handler = CoroutineExceptionHandler { _, exception ->
-//        Log.d(Thread.currentThread().name, "$exception handled !")
-//    }
-//
-//    lateinit var job: Job
-//    override val coroutineContext: CoroutineContext
-//        get() = Dispatchers.Main + job + handler
-//
-//    fun fetchTask() {
-//        GlobalScope.launch(coroutineContext) {
-//            val movie = async(Dispatchers.IO + handler) { fetchMovie() }
-//            val res = async(Dispatchers.IO + handler) { saveMovie(movie.await()) }
-//        }
-//    }
-//
-//    fun customScope() {
-//        launch {
-//            val movie = getMovie()
-//        }
-//
-//
-//        // or
-//        val id = async {
-//            val movie = getMovie()
-//            movie.id
-//
-//        }
-//
-//        // or
-//        launch {
-//            val deffered = listOf(
-//                async { getMovie() },
-//                async { getMovie() }
-//            )
-//
-//            deffered.awaitAll()
-//        }
-//    }
-//
-//    suspend fun fetchTask2(): Movie {
-//        return withContext(coroutineContext) {
-//            getMovie()
-//        }
-//    }
-//
-//    fun dispatchAction(id: Int) = liveData {
-//        emit(repo.fetchMovieWithDetails(id))
-//    }
-//
-//    private suspend fun fetchMovie(): Movie {
-//        return Movie()
-//    }
-//
-//    private suspend fun saveMovie(movie: Movie) {
-//
-//    }
-//
-//    private fun getMovie(): Movie {
-//        return Movie()
-//    }
+    private val handler = CoroutineExceptionHandler { _, exception ->
+        Log.d(Thread.currentThread().name, "$exception handled !")
+    }
+
+    var job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.IO + job +  handler
+
+/*    fun fetchTask() {
+        GlobalScope.launch(coroutineContext) {
+            val movie = async(Dispatchers.IO + handler) { fetchMovie() }
+            val res = async(Dispatchers.IO + handler) { saveMovie(movie.await()) }
+        }
+    }
+
+    fun customScope() {
+        repo.fetchMovieData(this)
+        launch {
+            val movie = getMovie()
+        }
+
+
+        // or
+        val id = async {
+            val movie = getMovie()
+            movie.id
+
+        }
+
+        // or
+        launch {
+            val d = listOf(
+                async { repo.fetchReviews(0) },
+                async { repo.fetchTrailers(0) },
+                async { repo.fetchCast(0) }
+            )
+
+            d.awaitAll()
+        }
+    }
+
+    suspend fun fetchTask2(): Movie {
+        return withContext(coroutineContext) {
+            getMovie()
+        }
+    }
+
+    fun dispatchAction(id: Int) = liveData {
+        emit(repo.fetchMovieWithDetails(id))
+    }
+
+    private suspend fun fetchMovie(): Movie {
+        return Movie()
+    }
+
+    private suspend fun saveMovie(movie: Movie) {
+
+    }
+
+    private fun getMovie(): Movie {
+        return Movie()
+    }*/
 }

@@ -38,6 +38,7 @@ class MovieDetailFragment : Fragment(), Injectable {
     private val dataBindingComponent: DataBindingComponent by lazy { FragmentDataBindingComponent(this) }
     private val trailerAdapter by lazy { TrailersAdapter(dataBindingComponent, executors, null) }
     private val reviewAdapter by lazy { ReviewAdapter(dataBindingComponent, executors, null) }
+    private val castAdapter by lazy { CastAdapter(dataBindingComponent, executors, null) }
     private lateinit var binding: MovieDetailFragmentBinding
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -69,6 +70,7 @@ class MovieDetailFragment : Fragment(), Injectable {
             lifecycleOwner = this@MovieDetailFragment
             viewPagerTrailer.adapter = trailerAdapter
             rvReview.adapter = reviewAdapter
+            rvCast.adapter = castAdapter
             binding = this
         }.run {
             return this.root
@@ -84,16 +86,14 @@ class MovieDetailFragment : Fragment(), Injectable {
             init(refID = movieId)
             binding.viewModel = this
             result.observe(this@MovieDetailFragment, Observer { res ->
-                Log.e(Thread.currentThread().name, "details: $movieId ${Gson().toJson(res)}")
+                Log.e(Thread.currentThread().name, "details: $movieId ${Gson().toJson(res?.data?.cast)}")
                 notifyViews()
                 trailerAdapter.submitList(res?.data?.trailers)
                 reviewAdapter.submitList(res?.data?.reviews)
+                castAdapter.submitList(res?.data?.cast)
                 if (res?.status == Status.ERROR)
                     showToast(getString(R.string.generalError))
             })
-
-            trailer.observe(this@MovieDetailFragment, Observer { })
-            review.observe(this@MovieDetailFragment, Observer { })
         }
     }
 

@@ -2,15 +2,12 @@ package com.example.movieapp.repo
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import com.example.movieapp.BuildConfig
 import com.example.movieapp.database.*
 import com.example.movieapp.remote.WebService
 import com.example.movieapp.ui.MoviesFragment
-import com.example.movieapp.util.ApiResponse
-import com.example.movieapp.util.AppExecutors
-import com.example.movieapp.util.NetworkBoundResource
-import com.example.movieapp.util.Resource
+import com.example.movieapp.util.*
 import com.google.gson.Gson
+import kotlinx.coroutines.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -55,7 +52,6 @@ class AppRepository @Inject constructor(
     }
 
     fun fetchMovieWithDetails(movieId: Int): LiveData<Resource<MovieWithDetail>> {
-        Log.e(Thread.currentThread().name, "fetch_detail")
         return object : NetworkBoundResource<MovieWithDetail, MovieDetail>(executor) {
             override fun saveCallResult(item: MovieDetail) {
                 dao.insertMovieDetails(item = item)
@@ -70,9 +66,8 @@ class AppRepository @Inject constructor(
         }.asLiveData()
     }
 
-    fun fetchMovieTrailer(movieId: Int): LiveData<Resource<List<MovieTrailer>>> {
-        Log.e(Thread.currentThread().name, "fetch_trailer")
-        return object : NetworkBoundResource<List<MovieTrailer>, TrailerResponse>(executor) {
+    private fun fetchMovieTrailer(movieId: Int) {
+        object : DataBoundResource<List<MovieTrailer>, TrailerResponse>() {
             override fun saveCallResult(item: TrailerResponse) {
                 dao.insertMovieTrailerList(item)
             }
@@ -81,14 +76,12 @@ class AppRepository @Inject constructor(
 
             override fun loadFromDb() = dao.loadMovieTrailer(movieId = movieId)
 
-            override fun createCall() =  webservice.fetchMovieTrailers(movieId)
-
-        }.asLiveData()
+            override fun createCall() = webservice.fetchMovieTrailers(movieId)
+        }
     }
 
-    fun fetchMovieReviews(movieId: Int): LiveData<Resource<List<Reviews>>> {
-        Log.e(Thread.currentThread().name, "fetch_review")
-        return object : NetworkBoundResource<List<Reviews>, ReviewsResponse>(executor) {
+    private fun fetchMovieReviews(movieId: Int) {
+        object : DataBoundResource<List<Reviews>, ReviewsResponse>() {
             override fun saveCallResult(item: ReviewsResponse) {
                 dao.insertReviewList(item)
             }
@@ -99,6 +92,33 @@ class AppRepository @Inject constructor(
 
             override fun createCall() = webservice.fetchMovieReview(movieId)
 
-        }.asLiveData()
+        }
     }
+
+    private fun fetchMovieCast(movieId: Int) {
+        object : DataBoundResource<List<Cast>, CastResponse>() {
+            override fun loadFromDb() = dao.loadCast(movieId = movieId)
+
+            override fun shouldFetch(data: List<Cast>?) = true
+
+            override fun createCall() = webservice.fetchCast(movieId)
+
+            override fun saveCallResult(item: CastResponse) {
+                dao.insertCastList(item)
+            }
+        }
+    }
+
+    fun fetchMovieData(movieId: Int, scope: CoroutineScope) {
+        scope.launch {
+            val d = listOf(
+                async { fetchMovieCast(movieId) },
+                async { fetchMovieTrailer(movieId) },
+                async { fetchMovieReviews(movieId) }
+            )
+
+            d.awaitAll()
+        }
+    }
+
 }

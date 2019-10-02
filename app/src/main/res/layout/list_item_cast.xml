@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+                name="item"
+                type="com.example.movieapp.database.Cast"/>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:selectableItemBackground"
+            android:padding="@dimen/material_component_cards_padding">
+
+        <ImageView
+                android:id="@+id/poster_image"
+                android:layout_width="120dp"
+                android:layout_height="140dp"
+                android:scaleType="fitXY"
+                android:minWidth="120dp"
+                android:elevation="8dp"
+                android:layout_gravity="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:imageUrl="@{item.profilePicture}"/>
+
+        <TextView
+                android:id="@+id/name_text_view"
+                android:layout_width="0dp"
+                android:layout_marginTop="@dimen/activity_margin_small"
+                style="@style/TextAppearance.AppCompat.Body2"
+                android:fontFamily="@font/montserrat_regular"
+                android:textColor="@color/primary_text"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_goneMarginTop="@dimen/activity_negative_margin_small"
+                app:layout_constraintStart_toStartOf="@id/poster_image"
+                app:layout_constraintTop_toBottomOf="@id/poster_image"
+                app:layout_constraintEnd_toEndOf="@id/poster_image"
+                tools:text="Brad Pitt"
+                android:text="@{item.name}"/>
+
+        <TextView
+                style="@style/Base.TextAppearance.AppCompat.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/secondary_text"
+                android:fontFamily="@font/montserrat_light"
+                android:layout_marginTop="@dimen/activity_margin_small"
+                android:layout_marginBottom="@dimen/activity_margin_small"
+                android:gravity="center"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="@{item.character}"
+                app:layout_constraintStart_toStartOf="@id/poster_image"
+                app:layout_constraintTop_toBottomOf="@id/name_text_view"
+                app:layout_constraintEnd_toEndOf="@id/poster_image"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="The Narrator"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
