@@ -37,4 +37,9 @@ interface WebService {
     fun fetchCast(
         @Path("id") id: Int
     ): Call<CastResponse>
+
+    @GET("movie/{movie_id}/similar")
+    fun fetchSimilarMovies(
+        @Path("id") id: Int
+    ): Call<MoviesResponse>
 }

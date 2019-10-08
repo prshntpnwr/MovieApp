@@ -4,6 +4,8 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.*
+import androidx.core.os.BuildCompat
 import androidx.multidex.MultiDex
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -20,7 +22,12 @@ class AppController : Application(), HasActivityInjector {
         super.onCreate()
         instance = this
         AppInjector.init(this)
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+//        val nightMode = if (BuildCompat.isAtLeastQ()) {
+//            MODE_NIGHT_FOLLOW_SYSTEM
+//        } else {
+//            MODE_NIGHT_AUTO_BATTERY
+//        }
+//        setDefaultNightMode(nightMode)
     }
 
     override fun attachBaseContext(base: Context) {

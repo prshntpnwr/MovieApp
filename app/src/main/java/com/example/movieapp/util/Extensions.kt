@@ -1,5 +1,7 @@
 package com.example.movieapp.util
 
+import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -24,4 +26,8 @@ fun Fragment.setActionBar(title: String) {
         setDisplayHomeAsUpEnabled(false)
         setDisplayShowHomeEnabled(false)
     }
+}
+
+fun Fragment.actionViewIntent(url: String) {
+    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
 }

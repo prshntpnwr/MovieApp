@@ -12,7 +12,6 @@ class ConverterFactory {
 
     @TypeConverter
     fun jsonToList(value: String?): MutableList<MovieGenre?>? {
-
         val objects = Gson().fromJson(value, Array<MovieGenre?>::class.java)
         val list = objects?.toMutableList()
         return list

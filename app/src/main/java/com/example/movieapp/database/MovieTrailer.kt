@@ -38,6 +38,8 @@ data class MovieTrailer(
 
     fun getTrailerPreview() = if (key == null) key else "http://img.youtube.com/vi/$key/mqdefault.jpg"
 
+    fun getTrailerUri() = "http://www.youtube.com/watch?v=$key"
+
     fun getTitle() = "$name \u2022 $type"
 
     fun getSubTitle() = "$site \u2022 ${size}p"

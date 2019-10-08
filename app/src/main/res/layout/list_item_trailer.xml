@@ -22,7 +22,7 @@
                     android:id="@+id/trailer_preview_image"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/poster_trailer_width"
-                    android:scaleType="fitXY"
+                    android:scaleType="centerCrop"
                     app:imageUrl="@{item.getTrailerPreview()}"
                     app:layout_constraintBottom_toTopOf="@id/title"
                     app:layout_constraintEnd_toEndOf="parent"

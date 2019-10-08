@@ -6,6 +6,9 @@ import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
+import androidx.core.os.BuildCompat
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
@@ -110,8 +113,22 @@ class MoviesFragment : Fragment(), Injectable {
         when (item.itemId) {
             R.id.action_trendy -> viewModel.fetchTask(FILTER_TRENDY)
             R.id.action_rated -> viewModel.fetchTask(FILTER_RATED)
+            R.id.action_theme -> changeTheme()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun changeTheme() {
+        val theme = when(viewModel.currentTheme ) {
+            AppCompatDelegate.MODE_NIGHT_NO -> {
+                viewModel.currentTheme = AppCompatDelegate.MODE_NIGHT_YES
+                AppCompatDelegate.MODE_NIGHT_YES
+            } else -> {
+                viewModel.currentTheme = AppCompatDelegate.MODE_NIGHT_NO
+                AppCompatDelegate.MODE_NIGHT_NO
+            }
+        }
+        setDefaultNightMode(theme)
     }
 
     private fun navController() = findNavController()

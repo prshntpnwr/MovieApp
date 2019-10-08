@@ -1,9 +1,12 @@
 package com.example.movieapp.binding
 
+import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
@@ -15,6 +18,10 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.example.movieapp.R
 import com.example.movieapp.database.MovieGenre
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
+import com.google.gson.Gson
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -29,7 +36,7 @@ class FragmentBindingAdapters @Inject constructor(val fragment: Fragment) {
         view.visibility = if (show) View.VISIBLE else View.GONE
     }
 
-    @BindingAdapter(value = ["imageUrl", "cornerRadius"], requireAll = false)
+    @BindingAdapter(value = ["imageUrl", "imageRadius"], requireAll = false)
     fun bindImage(imageView: ImageView, url: String?, radius: Int?) {
         url ?: return
         val circularProgressDrawable = CircularProgressDrawable(fragment.requireContext())
@@ -107,6 +114,14 @@ class FragmentBindingAdapters @Inject constructor(val fragment: Fragment) {
         }
     }
 
+    @BindingAdapter(value = ["currencyAmount"], requireAll = true)
+    fun bindCurrency(textView: TextView, amount: Long?) {
+        amount ?: return
+        val locale = Locale("en", "US")
+        val currencyFormat = NumberFormat.getCurrencyInstance(locale)
+        textView.text = currencyFormat.format(amount)
+    }
+
     @BindingAdapter(value = ["genresList"], requireAll = true)
     fun bindGenres(textView: TextView, list: MutableList<MovieGenre?>?) {
         list?.let {
@@ -119,4 +134,24 @@ class FragmentBindingAdapters @Inject constructor(val fragment: Fragment) {
         }
     }
 
+    @BindingAdapter(value = ["genresList"], requireAll = true)
+    fun bindGenre(chipGroup: ChipGroup, list: MutableList<MovieGenre?>?) {
+        list ?: return
+        val str = list.map { movieGenre -> movieGenre?.name }
+        bindChips(chipGroup, str)
+    }
+
+    @BindingAdapter(value = ["chipList"], requireAll = true)
+    fun bindChips(group: ChipGroup, list: List<String?>?) {
+        group.removeAllViews()
+        if (list.isNullOrEmpty()) return
+        for ((index, item) in list.withIndex()) {
+            val chip = Chip(this.fragment.requireContext()).apply {
+                id = index
+                text = item
+                setTextColor(ContextCompat.getColor(group.context, R.color.primary_text))
+            }
+            group.addView(chip)
+        }
+    }
 }

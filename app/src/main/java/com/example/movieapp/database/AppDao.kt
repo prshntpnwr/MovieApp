@@ -23,6 +23,9 @@ interface AppDao {
     @Query("SELECT * FROM movie_cast where movieId = :movieId")
     fun loadCast(movieId: Int): List<Cast>
 
+    @Query("SELECT * FROM movie_cast where movieId = :movieId")
+    fun loadSimilar(movieId: Int): List<Cast>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertMovies(list: List<Movie?>?)
 

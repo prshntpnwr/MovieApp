@@ -8,6 +8,7 @@
     <dimen name="activity_margin_small">4dp</dimen>
     <dimen name="padding_small">4dp</dimen>
     <dimen name="padding_mid">8dp</dimen>
+    <dimen name="padding_large">16dp</dimen>
 
     <!--material_card-->
     <dimen name="material_component_cards_space_between_cards">4dp</dimen>

@@ -1,5 +1,7 @@
 package com.example.movieapp.observer
 
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.databinding.Bindable
 import androidx.databinding.Observable
 import androidx.databinding.PropertyChangeRegistry
@@ -45,6 +47,8 @@ class MoviesViewModel @Inject constructor(
         shouldFetch = flag
         notifyPropertyChanged(BR.listStatus)
     }
+
+    var currentTheme = MODE_NIGHT_NO
 
     data class RepoID(val filter: Int?) {
         fun <T> ifExists(f: (Int) -> LiveData<T>): LiveData<T> {

@@ -91,7 +91,6 @@ class AppRepository @Inject constructor(
             override fun loadFromDb() = dao.loadMovieReviews(movieId = movieId)
 
             override fun createCall() = webservice.fetchMovieReview(movieId)
-
         }
     }
 

@@ -3,7 +3,6 @@ package com.example.movieapp.database
 import androidx.room.Entity
 import com.google.gson.annotations.SerializedName
 
-
 @Entity(tableName = "movie_detail",
     primaryKeys = ["id"])
 data class MovieDetail(
@@ -70,6 +69,7 @@ data class MovieDetail(
 
     @field:SerializedName("genres")
     var genres: MutableList<MovieGenre?>? = null
+
 ) {
 
     fun getPosterUrl() = "https://image.tmdb.org/t/p/w500$posterPath"

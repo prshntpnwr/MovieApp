@@ -21,15 +21,18 @@
 
         <ImageView
                 android:id="@+id/poster_image"
-                android:layout_width="120dp"
-                android:layout_height="140dp"
-                android:scaleType="fitXY"
+                android:layout_width="wrap_content"
+                android:layout_height="120dp"
                 android:minWidth="120dp"
-                android:elevation="8dp"
+                android:scaleType="centerCrop"
+                android:elevation="4dp"
+                android:padding="@dimen/padding_small"
                 android:layout_gravity="center"
+                app:imageRadius="@{24}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/name_text_view"
                 app:imageUrl="@{item.profilePicture}"/>
 
         <TextView
@@ -43,7 +46,6 @@
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:ellipsize="end"
-                app:layout_goneMarginTop="@dimen/activity_negative_margin_small"
                 app:layout_constraintStart_toStartOf="@id/poster_image"
                 app:layout_constraintTop_toBottomOf="@id/poster_image"
                 app:layout_constraintEnd_toEndOf="@id/poster_image"

@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/action_trendy"
-          android:icon="@drawable/avd_trend"
-          android:title="@string/trendy"
-          android:orderInCategory="100"
-          app:showAsAction="ifRoom|withText"
-          android:enabled="true"/>
+    <item
+            android:id="@+id/action_theme"
+            android:enabled="true"
+            android:icon="@drawable/avd_brightness"
+            android:orderInCategory="100"
+            android:title="@string/top_rated"
+            app:showAsAction="ifRoom|withText" />
 
-    <item android:id="@+id/action_rated"
-          android:icon="@drawable/avd_rated"
-          android:title="@string/top_rated"
-          android:orderInCategory="100"
-          app:showAsAction="ifRoom|withText"
-          android:enabled="true"/>
+    <item
+            android:id="@+id/action_trendy"
+            android:enabled="true"
+            android:icon="@drawable/avd_trend"
+            android:orderInCategory="100"
+            android:title="@string/trendy"
+            app:showAsAction="ifRoom|withText" />
+
+    <item
+            android:id="@+id/action_rated"
+            android:enabled="true"
+            android:icon="@drawable/avd_rated"
+            android:orderInCategory="100"
+            android:title="@string/top_rated"
+            app:showAsAction="ifRoom|withText" />
 
 </menu>

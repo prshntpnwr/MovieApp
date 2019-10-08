@@ -11,6 +11,11 @@
         <item name="android:textColor">@color/primary_text</item>
     </style>
 
+    <style name="AppTextAppearance.Body1" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:fontFamily">@font/montserrat_medium</item>
+        <item name="android:textColor">@color/primary_text</item>
+    </style>
+
     <style name="AppTextAppearance.Primary.Body1" parent="TextAppearance.MaterialComponents.Body1">
         <item name="android:fontFamily">@font/montserrat_regular</item>
         <item name="android:textColor">@color/primary_text</item>
@@ -29,6 +34,11 @@
     <style name="AppTextAppearance.Medium" parent="Base.TextAppearance.AppCompat.Medium">
         <item name="android:fontFamily">@font/montserrat_medium</item>
         <item name="android:textColor">@color/secondary_text</item>
+    </style>
+
+    <style name="AppTextAppearance.Secondary.Caption" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">@color/secondary_text</item>
+        <item name="android:fontFamily">@font/montserrat_regular</item>
     </style>
 
 </resources>

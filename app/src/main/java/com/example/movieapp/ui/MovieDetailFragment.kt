@@ -35,8 +35,17 @@ class MovieDetailFragment : Fragment(), Injectable {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val viewModel: MovieDetailViewModel by viewModels { viewModelFactory }
-    private val dataBindingComponent: DataBindingComponent by lazy { FragmentDataBindingComponent(this) }
-    private val trailerAdapter by lazy { TrailersAdapter(dataBindingComponent, executors, null) }
+    private val dataBindingComponent: DataBindingComponent by lazy {
+        FragmentDataBindingComponent(
+            this
+        )
+    }
+    private val trailerAdapter by lazy {
+        TrailersAdapter(
+            dataBindingComponent,
+            executors
+        ) { actionViewIntent(it.getTrailerUri()) }
+    }
     private val reviewAdapter by lazy { ReviewAdapter(dataBindingComponent, executors, null) }
     private val castAdapter by lazy { CastAdapter(dataBindingComponent, executors, null) }
     private lateinit var binding: MovieDetailFragmentBinding
@@ -50,7 +59,8 @@ class MovieDetailFragment : Fragment(), Injectable {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        val transition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+        val transition =
+            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
         sharedElementEnterTransition = ChangeBounds().apply { enterTransition = transition }
         sharedElementReturnTransition = ChangeBounds().apply { returnTransition = transition }
     }
@@ -86,7 +96,10 @@ class MovieDetailFragment : Fragment(), Injectable {
             init(refID = movieId)
             binding.viewModel = this
             result.observe(this@MovieDetailFragment, Observer { res ->
-                Log.e(Thread.currentThread().name, "details: $movieId ${Gson().toJson(res?.data?.cast)}")
+                Log.e(
+                    Thread.currentThread().name,
+                    "details: $movieId ${Gson().toJson(res?.data?.cast)}"
+                )
                 notifyViews()
                 trailerAdapter.submitList(res?.data?.trailers)
                 reviewAdapter.submitList(res?.data?.reviews)
