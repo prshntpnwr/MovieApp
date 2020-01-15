@@ -2,8 +2,8 @@
 <resources>
     <color name="colorPrimary">#CC8800F3</color>
     <color name="colorPrimaryDark">#CD5900B7</color>
-    <color name="colorSecondary">#B200E4CA</color>
-    <color name="colorSecondaryVariant">#BF008A89</color>
+    <color name="colorSecondary">#68BD6D</color>
+    <color name="colorSecondaryVariant">#4A9E4D</color>
     <color name="colorOnPrimary">#E4E4E4</color>
     <color name="colorOnSecondary">#111111</color>
     <color name="colorBackground">#1D1D1D</color>

@@ -2,11 +2,23 @@ package com.example.movieapp.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.movieapp.model.CastResponse
+import com.example.movieapp.model.ReviewsResponse
+import com.example.movieapp.model.TrailerResponse
 
 @Dao
 interface AppDao {
+    @Query("SELECT * from movies")
+    fun loadMovieList(): LiveData<List<Movie>>
+
+    @Query("SELECT * from movies")
+    fun loadMovies(): LiveData<List<Movie>>
+
     @Query("SELECT * from movies WHERE category = :category order by popularity desc")
     fun fetchMovieList(category: Int): LiveData<List<Movie>>
+
+    @Query("SELECT * from movies WHERE category = :category order by popularity desc")
+    fun fetchMoviesByCategory(category: Int): List<Movie>
 
     @Query("SELECT * FROM movie_detail where id = :id")
     fun loadMovieWithDetail(id: Int): LiveData<MovieWithDetail>
@@ -42,7 +54,7 @@ interface AppDao {
     fun deleteMovies()
 
     @Transaction
-    fun deleteAndInsertMovieList(listItem: List<Movie?>?, category: Int) {
+    fun insertMovieList(listItem: List<Movie?>?, category: Int) {
         listItem?.map { m -> m?.category = category }
         insertMovies(list = listItem)
     }

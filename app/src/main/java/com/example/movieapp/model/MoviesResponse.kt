@@ -1,5 +1,6 @@
-package com.example.movieapp.database
+package com.example.movieapp.model
 
+import com.example.movieapp.database.Movie
 import com.google.gson.annotations.SerializedName
 
 data class MoviesResponse(

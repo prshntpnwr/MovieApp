@@ -43,7 +43,14 @@ class MovieDetailViewModel @Inject constructor(
 
     fun init(refID: Int) {
         _refID.postValue(RepoID(refID))
-        repo.fetchMovieData(refID, this)
+        launch {
+            val d = listOf(
+                    async { repo.fetchMovieCast(refID) },
+                    async { repo.fetchMovieTrailer(refID) },
+                    async { repo.fetchMovieReviews(refID) }
+            )
+            d.awaitAll()
+        }
     }
 
     fun notifyViews() {

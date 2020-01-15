@@ -1,8 +1,10 @@
 package com.example.movieapp.di.module
 
 import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import com.example.movieapp.database.AppDatabase
+import com.example.movieapp.database.PreferenceManager
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -22,4 +24,8 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun provideGithubDao(database: AppDatabase) = database.appDao()
+
+    @Provides
+    @Singleton
+    fun providePrefManager(application: Application) = PreferenceManager.getInstance(application.baseContext)
 }

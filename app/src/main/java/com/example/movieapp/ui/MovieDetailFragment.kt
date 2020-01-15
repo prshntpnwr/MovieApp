@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.library.baseAdapters.BR
@@ -58,7 +59,7 @@ class MovieDetailFragment : Fragment(), Injectable {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+        setHasOptionsMenu(false)
         val transition =
             TransitionInflater.from(context).inflateTransition(android.R.transition.move)
         sharedElementEnterTransition = ChangeBounds().apply { enterTransition = transition }
@@ -82,6 +83,8 @@ class MovieDetailFragment : Fragment(), Injectable {
             rvReview.adapter = reviewAdapter
             rvCast.adapter = castAdapter
             binding = this
+
+            (activity as AppCompatActivity).supportActionBar?.hide()
         }.run {
             return this.root
         }

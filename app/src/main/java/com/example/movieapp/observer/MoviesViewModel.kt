@@ -1,74 +1,57 @@
 package com.example.movieapp.observer
 
-import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.databinding.Bindable
 import androidx.databinding.Observable
 import androidx.databinding.PropertyChangeRegistry
 import androidx.databinding.library.baseAdapters.BR
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel;
-import com.example.movieapp.BuildConfig
+import androidx.lifecycle.*
 import com.example.movieapp.database.Movie
+import com.example.movieapp.model.MovieHolder
 import com.example.movieapp.repo.AppRepository
 import com.example.movieapp.util.AbsentedLiveData
 import com.example.movieapp.util.Resource
 import com.example.movieapp.util.Status
+import kotlinx.coroutines.*
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 class MoviesViewModel @Inject constructor(
-    repo: AppRepository
-) : ViewModel(), Observable {
+    val repo: AppRepository
+) : ViewModel(), Observable, CoroutineScope {
 
-    private var shouldFetch = true
-    private val _refID: MutableLiveData<RepoID> = MutableLiveData()
-    val refID: LiveData<RepoID>
-        get() = _refID
+    var currentTheme = MODE_NIGHT_NO
+    private val _refID = MutableLiveData<Boolean>()
     val listStatus: Status?
         @Bindable get() = result.value?.status
 
-    val result: LiveData<Resource<List<Movie>>> = Transformations
-        .switchMap(_refID) { input ->
-            input.ifExists { category ->
-                repo.fetchMovieList(category)
-            }
-        }
+    val result: LiveData<Resource<List<Movie>>> =
+        Transformations.switchMap(_refID) { repo.loadMovies() }
 
-    fun fetchTask(filter: Int) {
-        if (!shouldFetch) return
-        val update = RepoID(filter)
-        if (_refID.value == update) return
-        _refID.postValue(update)
+    init {
+        _refID.value = true
     }
 
-    fun updateFetch(flag: Boolean) {
-        shouldFetch = flag
+    fun loadNow() {
+        repo.loadAllMovies(this)
+    }
+
+    fun updateStatus() {
         notifyPropertyChanged(BR.listStatus)
-    }
-
-    var currentTheme = MODE_NIGHT_NO
-
-    data class RepoID(val filter: Int?) {
-        fun <T> ifExists(f: (Int) -> LiveData<T>): LiveData<T> {
-            return if (filter == null) {
-                AbsentedLiveData.create()
-            } else {
-                f(filter)
-            }
-        }
     }
 
     private val callbacks: PropertyChangeRegistry = PropertyChangeRegistry()
 
     override fun addOnPropertyChangedCallback(
-        callback: Observable.OnPropertyChangedCallback) {
+        callback: Observable.OnPropertyChangedCallback
+    ) {
         callbacks.add(callback)
     }
 
     override fun removeOnPropertyChangedCallback(
-        callback: Observable.OnPropertyChangedCallback) {
+        callback: Observable.OnPropertyChangedCallback
+    ) {
         callbacks.remove(callback)
     }
 
@@ -89,4 +72,11 @@ class MoviesViewModel @Inject constructor(
     fun notifyPropertyChanged(fieldId: Int) {
         callbacks.notifyCallbacks(this, fieldId, null)
     }
+
+    private val handler = CoroutineExceptionHandler { _, exception ->
+        Log.d(Thread.currentThread().name, "$exception handled !")
+    }
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.IO + SupervisorJob() + handler
 }

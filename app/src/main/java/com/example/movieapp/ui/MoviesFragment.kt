@@ -8,7 +8,6 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
-import androidx.core.os.BuildCompat
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
@@ -21,12 +20,16 @@ import androidx.navigation.fragment.findNavController
 import com.example.movieapp.R
 import com.example.movieapp.binding.FragmentDataBindingComponent
 import com.example.movieapp.database.Movie
+import com.example.movieapp.database.PreferenceManager
 import com.example.movieapp.databinding.MoviesFragmentBinding
 import com.example.movieapp.di.Injectable
 import com.example.movieapp.observer.MoviesViewModel
 import com.example.movieapp.ui.MovieDetailFragment.Companion.MOVIE_ID
 import com.example.movieapp.ui.MovieDetailFragment.Companion.MOVIE_TITLE
-import com.example.movieapp.util.*
+import com.example.movieapp.util.AppExecutors
+import com.example.movieapp.util.Status
+import com.example.movieapp.util.setActionBar
+import com.example.movieapp.util.showSnackBar
 import com.google.gson.Gson
 import javax.inject.Inject
 
@@ -36,7 +39,11 @@ class MoviesFragment : Fragment(), Injectable {
     lateinit var executors: AppExecutors
 
     @Inject
+    lateinit var prefManager: PreferenceManager
+
+    @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     private val viewModel: MoviesViewModel by viewModels { viewModelFactory }
     private val dataBindingComponent: DataBindingComponent by lazy { FragmentDataBindingComponent(this) }
     private val adapter by lazy { MoviesAdapter(dataBindingComponent, executors, ::onItemClick) }
@@ -64,6 +71,7 @@ class MoviesFragment : Fragment(), Injectable {
             it.rvMovies.adapter = adapter
             it.lifecycleOwner = this
             binding = it
+            (activity as AppCompatActivity).supportActionBar?.show()
         }.run {
             return this.root
         }
@@ -72,12 +80,12 @@ class MoviesFragment : Fragment(), Injectable {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setActionBar(getString(R.string.app_name))
+//        applyTheme()
 
         viewModel.apply {
-            fetchTask(FILTER_TRENDY)
+            loadNow()
             result.observe(this@MoviesFragment, Observer { res ->
                 adapter.submitList(res?.data)
-                updateFetch(flag = false)
                 Log.e(Thread.currentThread().name, "movies: ${Gson().toJson(res)}")
                 if (res?.status == Status.ERROR) showSnackBar(res.message ?: "")
             })
@@ -109,10 +117,8 @@ class MoviesFragment : Fragment(), Injectable {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        viewModel.updateFetch(flag = true)
+//        viewModel.updateFetch(flag = true)
         when (item.itemId) {
-            R.id.action_trendy -> viewModel.fetchTask(FILTER_TRENDY)
-            R.id.action_rated -> viewModel.fetchTask(FILTER_RATED)
             R.id.action_theme -> changeTheme()
         }
         return super.onOptionsItemSelected(item)
@@ -136,5 +142,8 @@ class MoviesFragment : Fragment(), Injectable {
     companion object {
         const val FILTER_TRENDY = 0
         const val FILTER_RATED = 1
+        const val FILTER_LATEST = 2
+        const val FILTER_UPCOMING = 3
+        const val FILTER_PLAYING_NOW = 4
     }
 }
